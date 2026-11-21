@@ -1,0 +1,2957 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Цифровой деканат — Академия Алфея</title>
+<style>
+  :root {
+    --bg-start: #2F1D4E;
+    --bg-mid: #37225C;
+    --bg-end: #432A6E;
+    --card: rgba(82, 53, 133, 0.55);
+    --card-border: rgba(252, 231, 243, 0.30);
+    --accent: #EC4899;
+    --accent-light: #F472B6;
+    --accent-dark: #D946EF;
+    --gold: #FBBF24;
+    --sky: #38BDF8;
+    --emerald: #10B981;
+    --text: #FFFFFF;
+    --text-lavender: #F3E8FF;
+    --muted: #D8B4FE;
+    --muted-dim: #B89CD8;
+  }
+  body.staff-mode {
+    --card-border: rgba(253, 224, 71, 0.35);
+    --accent: #F59E0B;
+    --accent-light: #FBBF24;
+    --accent-dark: #D97706;
+    --muted: #FDE68A;
+    --muted-dim: #D4B896;
+    --text-lavender: #FEF3C7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { 
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+    color: var(--text); 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+  }
+  body {
+    background: 
+      radial-gradient(circle at 15% 20%, rgba(244, 114, 182, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(217, 70, 239, 0.18) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.10) 0%, transparent 40%),
+      linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+    background-attachment: fixed;
+    min-width: 320px;
+    max-width: 100vw;
+  }
+  body.staff-mode {
+    background: 
+      radial-gradient(circle at 15% 20%, rgba(251, 191, 36, 0.25) 0%, transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(245, 158, 11, 0.18) 0%, transparent 50%),
+      linear-gradient(135deg, #2F1D4E 0%, #37225C 50%, #432A6E 100%);
+  }
+  #app-root { overflow-x: hidden; width: 100%; max-width: 100vw; }
+  .glass {
+    background: var(--card);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+  }
+  .glass:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.22); }
+  .glass-strong {
+    background: rgba(47, 29, 78, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+  }
+  .accent-text { color: var(--accent-light); }
+  .gold-text { color: var(--gold); }
+  .emerald-text { color: var(--emerald); }
+  .sky-text { color: var(--sky); }
+  .btn-accent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #FFFFFF;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35);
+    width: 100%;
+  }
+  body.staff-mode .btn-accent { box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4); }
+  .btn-accent:hover { transform: translateY(-1px); }
+  .btn-accent:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    transition: all 0.3s ease;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.14); }
+  .btn-link {
+    background: none; border: none; color: var(--accent-light);
+    cursor: pointer; font-size: 13px; text-decoration: underline; padding: 0;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 1px;
+    padding: 5px 1px; border-radius: 8px; color: var(--muted-dim);
+    transition: all 0.3s ease; cursor: pointer; font-size: 9px;
+    line-height: 1.15;
+    min-width: 0;
+    text-align: center;
+  }
+  .nav-item.active { 
+    color: var(--accent-light); 
+    background: rgba(236, 72, 153, 0.18);
+  }
+  body.staff-mode .nav-item.active {
+    background: rgba(245, 158, 11, 0.22);
+    color: var(--gold);
+  }
+  .nav-item:hover { color: var(--text); }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .progress-track { background: rgba(255,255,255,0.12); border-radius: 999px; overflow: hidden; height: 10px; }
+  .progress-fill {
+    height: 100%; border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    transition: width 0.8s cubic-bezier(.2,.8,.2,1);
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 600;
+    white-space: normal;
+    word-break: break-word;
+    max-width: 100%;
+  }
+  .badge-accent { background: rgba(236, 72, 153, 0.22); color: var(--accent-light); }
+  body.staff-mode .badge-accent { background: rgba(245, 158, 11, 0.22); color: var(--gold); }
+  .badge-gold { background: rgba(251, 191, 36, 0.22); color: var(--gold); }
+  .badge-emerald { background: rgba(16, 185, 129, 0.22); color: var(--emerald); }
+  .badge-sky { background: rgba(56, 189, 248, 0.22); color: var(--sky); }
+  .badge-gray { background: rgba(255,255,255,0.10); color: var(--muted); }
+  .badge-red { background: rgba(239, 68, 68, 0.22); color: #fca5a5; }
+  .badge-purple { background: rgba(168, 85, 247, 0.22); color: #d8b4fe; }
+  .input {
+    width: 100%; background: rgba(255,255,255,0.08);
+    border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 11px 13px; color: var(--text);
+    font-size: 14px; font-family: inherit;
+    transition: all 0.3s ease;
+  }
+  .input:focus { 
+    outline: none; border-color: var(--accent); 
+    background: rgba(255,255,255,0.12); 
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.20);
+  }
+  body.staff-mode .input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22);
+  }
+  .input::placeholder { color: var(--muted-dim); }
+  select.input { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23D8B4FE' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+  select.input option { background: #37225C; color: var(--text); }
+  .fade-in { animation: fadeIn 0.35s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .lesson-card { border-left: 3px solid transparent; padding: 12px; }
+  .lesson-card.now { 
+    border-left-color: var(--accent); 
+    background: rgba(236, 72, 153, 0.12);
+  }
+  body.staff-mode .lesson-card.now {
+    border-left-color: var(--gold);
+    background: rgba(245, 158, 11, 0.12);
+  }
+  .lesson-card.cancelled { opacity: .6; border-left-color: #f87171; background: rgba(248,113,113,0.08); }
+  .lesson-card.moved { 
+    border-left-color: var(--sky); 
+    background: rgba(56, 189, 248, 0.10);
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 10px; border-radius: 999px; font-size: 11px;
+    background: rgba(255,255,255,0.08); border: 1px solid var(--card-border);
+    cursor: pointer; transition: all 0.3s ease; color: var(--text);
+    font-family: inherit;
+  }
+  .chip.active { 
+    background: rgba(236, 72, 153, 0.22); 
+    border-color: var(--accent); 
+    color: var(--accent-light);
+  }
+  body.staff-mode .chip.active {
+    background: rgba(245, 158, 11, 0.22);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .chat-bubble-user { 
+    background: rgba(236, 72, 153, 0.22); 
+    border: 1px solid rgba(236, 72, 153, 0.45);
+  }
+  body.staff-mode .chat-bubble-user {
+    background: rgba(245, 158, 11, 0.22);
+    border-color: rgba(245, 158, 11, 0.45);
+  }
+  .chat-bubble-bot { 
+    background: rgba(255,255,255,0.08); 
+    border: 1px solid var(--card-border);
+  }
+  .floating-btn {
+    position: fixed; bottom: 80px; right: 12px; z-index: 60;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #FFFFFF; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(236, 72, 153, 0.5);
+    cursor: pointer; transition: all 0.3s ease; border: none;
+  }
+  body.staff-mode .floating-btn {
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.5);
+  }
+  .floating-btn:hover { transform: scale(1.08); }
+  @media (min-width: 768px) { .floating-btn { bottom: 24px; right: 24px; width: 56px; height: 56px; } }
+  .dot-pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--emerald); animation: pulse 1.6s infinite; display: inline-block; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.2); } }
+  @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  .hide-scroll::-webkit-scrollbar { display: none; }
+  .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+  .icon { width: 18px; height: 18px; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+  .icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  button, input, select, textarea { font-family: inherit; }
+  .spinner { width: 16px; height: 16px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .role-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px; border-radius: 999px; font-size: 10px; font-weight: 600;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.28), rgba(251, 191, 36, 0.18));
+    color: #FDE68A;
+    border: 1px solid rgba(253, 224, 71, 0.45);
+    white-space: nowrap;
+  }
+  .role-badge.student {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.28), rgba(244, 114, 182, 0.18));
+    color: #F9A8D4;
+    border-color: rgba(244, 114, 182, 0.45);
+  }
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(20, 10, 35, 0.88);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px;
+  }
+  .modal-content { 
+    max-width: 100%; 
+    width: 100%;
+    max-height: 90vh; 
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease;
+    margin: 0 4px;
+  }
+  @media (min-width: 480px) {
+    .modal-content { max-width: 440px; margin: 0 auto; }
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .grade-input {
+    width: 56px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 6px 4px;
+    color: var(--text);
+    font-size: 14px;
+    text-align: center;
+  }
+  .grade-input:focus { outline: none; border-color: var(--accent); }
+  .grade-btn {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .grade-btn:hover { background: rgba(255,255,255,0.12); }
+  .grade-btn.plus { color: var(--emerald); }
+  .grade-btn.minus { color: #f87171; }
+  .moved-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;
+    background: rgba(56, 189, 248, 0.22);
+    color: #7DD3FC;
+    border: 1px solid rgba(56, 189, 248, 0.5);
+    letter-spacing: 0.5px;
+  }
+  .moved-old {
+    text-decoration: line-through;
+    color: var(--muted-dim);
+    font-size: 11px;
+  }
+  .moved-new {
+    color: var(--sky);
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .moved-arrow { color: var(--muted-dim); margin: 0 4px; }
+  .moved-note {
+    font-size: 11px;
+    color: var(--muted-dim);
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .toast-container {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: calc(100% - 24px);
+    max-width: 400px;
+    pointer-events: none;
+  }
+  .toast {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+    pointer-events: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.success {
+    background: rgba(16, 185, 129, 0.95);
+    color: #FFFFFF;
+    border: 1px solid rgba(16, 185, 129, 0.6);
+  }
+  .toast.error {
+    background: rgba(239, 68, 68, 0.95);
+    color: #FFFFFF;
+    border: 1px solid rgba(239, 68, 68, 0.6);
+  }
+  .toast.info {
+    background: rgba(56, 189, 248, 0.95);
+    color: #FFFFFF;
+    border: 1px solid rgba(56, 189, 248, 0.6);
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-20px); } }
+  .text-wrap {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  .page-container {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding: 72px 10px 112px 10px;
+  }
+  @media (min-width: 768px) {
+    .page-container { padding: 72px 24px 112px 24px; max-width: 1200px; margin: 0 auto; }
+  }
+  .student-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+  }
+  @media (min-width: 480px) {
+    .student-row {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .filter-tabs .chip {
+    flex-shrink: 0;
+  }
+  /* Талон */
+  .ticket-card {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(217, 70, 239, 0.12));
+    border: 2px dashed rgba(244, 114, 182, 0.5);
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+  }
+  body.staff-mode .ticket-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(251, 191, 36, 0.12));
+    border-color: rgba(251, 191, 36, 0.5);
+  }
+  .ticket-number {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent-light);
+    letter-spacing: 1px;
+    font-family: 'Courier New', monospace;
+  }
+  body.staff-mode .ticket-number { color: var(--gold); }
+  .ticket-cut {
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: var(--bg-mid);
+    border-radius: 50%;
+  }
+  .ticket-cut.right {
+    left: auto;
+    right: -2px;
+  }
+  /* Сообщение в обращении */
+  .msg-bubble {
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    max-width: 90%;
+    line-height: 1.4;
+  }
+  .msg-bubble.user {
+    background: rgba(236, 72, 153, 0.18);
+    border: 1px solid rgba(236, 72, 153, 0.35);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .msg-bubble.staff {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  body.staff-mode .msg-bubble.user {
+    background: rgba(245, 158, 11, 0.18);
+    border-color: rgba(245, 158, 11, 0.35);
+  }
+  .appeal-card {
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--card-border);
+    margin-bottom: 10px;
+  }
+  .contact-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    border: 1px solid var(--card-border);
+  }
+  .contact-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(236, 72, 153, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--accent-light);
+  }
+  body.staff-mode .contact-icon {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--gold);
+  }
+  .tab-switcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+  }
+  .tab-switcher button {
+    padding: 9px 8px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted-dim);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab-switcher button.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+  }
+  body.staff-mode .tab-switcher button.active {
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  }
+  .time-slot {
+    padding: 8px 6px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    font-family: inherit;
+  }
+  .time-slot:hover { background: rgba(255,255,255,0.12); }
+  .time-slot.active {
+    background: rgba(236, 72, 153, 0.22);
+    border-color: var(--accent);
+    color: var(--accent-light);
+  }
+  body.staff-mode .time-slot.active {
+    background: rgba(245, 158, 11, 0.22);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+</style>
+</head>
+<body>
+<div id="app-root"><div id="root"></div></div>
+
+<script>
+(function() {
+  'use strict';
+
+  const ICONS = {
+    user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    grad: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+    file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+    bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+    map: '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>',
+    lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+    logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+    plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+    x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+    send: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+    sparkles: '<path d="M12 3l1.9 5.8L20 10l-5.8 1.9L12 18l-1.9-6.1L4 10l6.1-1.2z"/>',
+    check: '<polyline points="20 6 9 17 4 12"/>',
+    alert: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+    pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    msg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    mail: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',
+    phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    id: '<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h4"/>',
+    school: '<path d="M2 22h20M4 22V10l8-6 8 6v12"/><path d="M10 22v-6h4v6"/>',
+    chart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+    coffee: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>',
+    door: '<path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><path d="M9 12h.01"/>',
+    building: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M8 10h.01M16 10h.01M12 14h.01M8 14h.01M16 14h.01"/>',
+    inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+    loader: '<line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>',
+    alarm: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3L2 6M22 6l-3-3"/><path d="M6.38 19.7L4 22M17.64 19.67L20 22"/>',
+    megaphone: '<path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+    crown: '<path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16a2 2 0 1 0 0 4h14a2 2 0 1 0 0-4H5z"/>',
+    clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    ticket: '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/><line x1="13" y1="5" x2="13" y2="7"/><line x1="13" y1="11" x2="13" y2="13"/><line x1="13" y1="17" x2="13" y2="19"/>'
+  };
+  function icon(name, cls, size) {
+    cls = cls || '';
+    size = size || 18;
+    return '<span class="icon ' + cls + '" style="width:' + size + 'px;height:' + size + 'px"><svg viewBox="0 0 24 24">' + (ICONS[name] || '') + '</svg></span>';
+  }
+
+  function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+  function sha256(message) {
+    var k = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+    var h0=0x6a09e667,h1=0xbb67ae85,h2=0x3c6ef372,h3=0xa54ff53a,h4=0x510e527f,h5=0x9b05688c,h6=0x1f83d9ab,h7=0x5be0cd19;
+    var bytes = typeof message === 'string' ? new TextEncoder().encode(message) : message;
+    var len = bytes.length;
+    var words = [];
+    for (var i = 0; i < len; i++) words[i >> 2] |= bytes[i] << ((3 - (i & 3)) * 8);
+    var bitLen = len * 8;
+    words[bitLen >> 5] |= 0x80 << ((31 - (bitLen & 31)) >>> 0);
+    var chunkLen = (Math.ceil((bitLen + 65) / 512) * 16);
+    words[chunkLen - 1] = bitLen;
+    for (var j = 0; j < words.length; j += 16) {
+      var w = words.slice(j, j + 16);
+      var a=h0,b=h1,c=h2,d=h3,e=h4,f=h5,g=h6,h=h7;
+      for (var ii = 0; ii < 64; ii++) {
+        if (ii >= 16) {
+          var s0 = rightRotate(w[ii-15], 7) ^ rightRotate(w[ii-15], 18) ^ (w[ii-15] >>> 3);
+          var s1 = rightRotate(w[ii-2], 17) ^ rightRotate(w[ii-2], 19) ^ (w[ii-2] >>> 10);
+          w[ii] = (w[ii-16] + s0 + w[ii-7] + s1) | 0;
+        }
+        var S1 = rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25);
+        var ch = (e & f) ^ (~e & g);
+        var temp1 = (h + S1 + ch + k[ii] + w[ii]) | 0;
+        var S0 = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
+        var maj = (a & b) ^ (a & c) ^ (b & c);
+        var temp2 = (S0 + maj) | 0;
+        h=g; g=f; f=e; e=(d + temp1) | 0;
+        d=c; c=b; b=a; a=(temp1 + temp2) | 0;
+      }
+      h0=(h0+a)|0; h1=(h1+b)|0; h2=(h2+c)|0; h3=(h3+d)|0;
+      h4=(h4+e)|0; h5=(h5+f)|0; h6=(h6+g)|0; h7=(h7+h)|0;
+    }
+    return [h0,h1,h2,h3,h4,h5,h6,h7].map(function(v){ return (v >>> 0).toString(16).padStart(8,'0'); }).join('');
+  }
+  function hexToBytes(hex) {
+    var out = new Uint8Array(hex.length / 2);
+    for (var i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i*2,2),16);
+    return out;
+  }
+  function hmacSha256(key, message) {
+    var keyBytes = typeof key === 'string' ? new TextEncoder().encode(key) : key;
+    var msgBytes = typeof message === 'string' ? new TextEncoder().encode(message) : message;
+    var k = keyBytes;
+    if (k.length > 64) k = hexToBytes(sha256(k));
+    if (k.length < 64) { var padded = new Uint8Array(64); padded.set(k); k = padded; }
+    var oKey = new Uint8Array(64), iKey = new Uint8Array(64);
+    for (var i = 0; i < 64; i++) { oKey[i] = k[i] ^ 0x5c; iKey[i] = k[i] ^ 0x36; }
+    var inner = new Uint8Array(iKey.length + msgBytes.length);
+    inner.set(iKey); inner.set(msgBytes, iKey.length);
+    var innerHash = hexToBytes(sha256(inner));
+    var outer = new Uint8Array(oKey.length + innerHash.length);
+    outer.set(oKey); outer.set(innerHash, oKey.length);
+    return sha256(outer);
+  }
+  function bytesToBase64(bytes) {
+    var s = ''; for (var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+    return btoa(s);
+  }
+  function base64ToBytes(b64) {
+    var s = atob(b64);
+    var out = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; i++) out[i] = s.charCodeAt(i);
+    return out;
+  }
+  var SECRET = "alfea-deanery-jwt-secret-2026";
+  function signToken(payload) {
+    var header = { alg: "HS256", typ: "JWT" };
+    var h = bytesToBase64(new TextEncoder().encode(JSON.stringify(header))).replace(/=+$/,'');
+    var p = bytesToBase64(new TextEncoder().encode(JSON.stringify(payload))).replace(/=+$/,'');
+    var sig = hmacSha256(SECRET, h + "." + p);
+    return h + "." + p + "." + bytesToBase64(hexToBytes(sig)).replace(/=+$/,'');
+  }
+  function verifyToken(token) {
+    try {
+      var parts = token.split(".");
+      if (parts.length !== 3) return null;
+      var h = parts[0], p = parts[1], s = parts[2];
+      var expectedSig = bytesToBase64(hexToBytes(hmacSha256(SECRET, h + "." + p))).replace(/=+$/,'');
+      if (expectedSig !== s) return null;
+      var payload = JSON.parse(new TextDecoder().decode(base64ToBytes(p)));
+      if (payload.exp && payload.exp < Date.now()) return null;
+      return payload;
+    } catch (e) { return null; }
+  }
+
+  var DB_KEY = "alfea_db_v1";
+  var DB_VERSION_KEY = "alfea_db_version";
+  var TOKEN_KEY = "alfea_token";
+  var CURRENT_DB_VERSION = 8;
+
+  function loadDB() { try { var r = localStorage.getItem(DB_KEY); if (r) return JSON.parse(r); } catch(e){} return null; }
+  function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+  function seedDB() {
+    var currentVersion = parseInt(localStorage.getItem(DB_VERSION_KEY) || '0');
+    if (currentVersion < CURRENT_DB_VERSION) {
+      console.log('[DB] Принудительный сброс БД (версия ' + currentVersion + ' < ' + CURRENT_DB_VERSION + ')');
+      localStorage.removeItem(DB_KEY);
+      localStorage.removeItem(DB_VERSION_KEY);
+    }
+    var existing = loadDB();
+    if (existing) return existing;
+    
+    console.log('[DB] Создаём новую БД v' + CURRENT_DB_VERSION);
+    
+    var stellaPwd = sha256("Solaria2026");
+    var skyPwd = sha256("Eraklyon2026");
+    var faragondaPwd = sha256("AlfeaStaff2026");
+    var defaultPwd = sha256("Student2026");
+    
+    var today = new Date();
+    var dayIdx = today.getDay();
+    var monday = new Date(today); monday.setDate(today.getDate() - ((dayIdx+6)%7));
+    function fmt(d) { return d.toISOString().slice(0,10); }
+    
+    var moveDay = dayIdx >= 1 && dayIdx <= 5 ? dayIdx : 1;
+    var moveDate = fmt(new Date(monday.getTime() + (moveDay - 1) * 86400000));
+    
+    var tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+    var dayAfter = new Date(today); dayAfter.setDate(today.getDate() + 2);
+    
+    var db = {
+      users: [
+        { 
+          id: "u_stella", login: "stella", passwordHash: stellaPwd, role: "student",
+          fullName: "Стелла Солярис", faculty: "Факультет Аркано-Лингвистики",
+          direction: "Прикладная лингвистика и межкультурные коммуникации",
+          course: 2, group: "АЛ-204", studentId: "АЛФ-2025-0418", 
+          email: "s.solaris@edu.alfea.magic", phone: "+7 (900) 555-01-24" 
+        },
+        { 
+          id: "u_sky", login: "sky", passwordHash: skyPwd, role: "student",
+          fullName: "Скай Эраклион", faculty: "Факультет Стихийной Инженерии",
+          direction: "Информационная безопасность и магические системы",
+          course: 3, group: "СИ-301", studentId: "АЛФ-2024-0192", 
+          email: "s.eraklion@edu.alfea.magic", phone: "+7 (900) 555-01-89" 
+        },
+        {
+          id: "u_faragonda", login: "faragonda", passwordHash: faragondaPwd, role: "staff",
+          fullName: "Профессор Фарагонда", position: "Директор Академии",
+          department: "Кафедра высшей магии и педагогики",
+          office: "Корпус A, каб. 101",
+          email: "faragonda@edu.alfea.magic",
+          officeHours: "Пн–Пт 10:00–17:00",
+          phone: "+7 (900) 555-00-01",
+          subjects: ["Основы аркано-лингвистики", "Теория магических систем"]
+        },
+        { id: "u_bloom", login: "bloom", passwordHash: defaultPwd, role: "student",
+          fullName: "Блум Домино", faculty: "Факультет Стихийной Инженерии",
+          direction: "Магическая физика", course: 2, group: "СИ-202",
+          studentId: "АЛФ-2025-0201", email: "b.domino@edu.alfea.magic", phone: "+7 (900) 555-02-01" },
+        { id: "u_flora", login: "flora", passwordHash: defaultPwd, role: "student",
+          fullName: "Флора Линфея", faculty: "Факультет Био-Энергетики",
+          direction: "Био-энергетические системы", course: 2, group: "БЭ-201",
+          studentId: "АЛФ-2025-0301", email: "f.linfea@edu.alfea.magic", phone: "+7 (900) 555-03-01" },
+        { id: "u_musa", login: "musa", passwordHash: defaultPwd, role: "student",
+          fullName: "Муза Мелодия", faculty: "Факультет Аркано-Лингвистики",
+          direction: "Прикладная лингвистика и межкультурные коммуникации", course: 2, group: "АЛ-204",
+          studentId: "АЛФ-2025-0419", email: "m.melodia@edu.alfea.magic", phone: "+7 (900) 555-04-19" },
+        { id: "u_tecna", login: "tecna", passwordHash: defaultPwd, role: "student",
+          fullName: "Текна Зенит", faculty: "Факультет Стихийной Инженерии",
+          direction: "Информационная безопасность и магические системы", course: 3, group: "СИ-301",
+          studentId: "АЛФ-2024-0302", email: "t.zenit@edu.alfea.magic", phone: "+7 (900) 555-03-02" },
+        { id: "u_leila", login: "leila", passwordHash: defaultPwd, role: "student",
+          fullName: "Лейла Андрос", faculty: "Факультет Аркано-Лингвистики",
+          direction: "Прикладная лингвистика и межкультурные коммуникации", course: 2, group: "АЛ-204",
+          studentId: "АЛФ-2025-0420", email: "l.andros@edu.alfea.magic", phone: "+7 (900) 555-04-20" },
+        { id: "u_riven", login: "riven", passwordHash: defaultPwd, role: "student",
+          fullName: "Ривен Тенебрис", faculty: "Факультет Стихийной Инженерии",
+          direction: "Информационная безопасность и магические системы", course: 3, group: "СИ-301",
+          studentId: "АЛФ-2024-0303", email: "r.tenebris@edu.alfea.magic", phone: "+7 (900) 555-03-03" },
+        { id: "u_brandon", login: "brandon", passwordHash: defaultPwd, role: "student",
+          fullName: "Брендон Файер", faculty: "Факультет Стихийной Инженерии",
+          direction: "Информационная безопасность и магические системы", course: 3, group: "СИ-301",
+          studentId: "АЛФ-2024-0304", email: "b.fire@edu.alfea.magic", phone: "+7 (900) 555-03-04" },
+        { id: "u_timmy", login: "timmy", passwordHash: defaultPwd, role: "student",
+          fullName: "Тимми Тёрнер", faculty: "Факультет Аркано-Лингвистики",
+          direction: "Прикладная лингвистика и межкультурные коммуникации", course: 2, group: "АЛ-204",
+          studentId: "АЛФ-2025-0421", email: "t.turner@edu.alfea.magic", phone: "+7 (900) 555-04-21" }
+      ],
+      schedule: {
+        u_stella: {
+          regular: [
+            { day: 1, start: "09:00", end: "10:30", subject: "Древние руны", room: "B-402", teacher: "проф. Палладиум А.В.", type: "Лекция" },
+            { day: 1, start: "10:45", end: "12:15", subject: "Магическая лингвистика", room: "A-210", teacher: "доц. Мусса Б.К.", type: "Семинар" },
+            { day: 2, start: "11:00", end: "12:30", subject: "Зельеварение", room: "C-105", teacher: "проф. Изумрудная Л.М.", type: "Практика" },
+            { day: 2, start: "13:00", end: "14:30", subject: "История волшебных культур", room: "S-301", teacher: "проф. Фарандель Э.С.", type: "Лекция" },
+            { day: 3, start: "09:00", end: "10:30", subject: "Английский (магический)", room: "A-312", teacher: "ст.пр. Лейла Н.", type: "Семинар" },
+            { day: 3, start: "10:45", end: "12:15", subject: "Каллиграфия символов", room: "B-208", teacher: "доц. Пергамент И.Д.", type: "Практика" },
+            { day: 4, start: "13:00", end: "14:30", subject: "Философия магии", room: "S-102", teacher: "проф. Оратор К.Р.", type: "Лекция" },
+            { day: 4, start: "14:45", end: "16:15", subject: "Древние руны", room: "B-402", teacher: "проф. Палладиум А.В.", type: "Семинар" },
+            { day: 5, start: "09:00", end: "10:30", subject: "Физическая культура", room: "S-спорт", teacher: "ст.пр. Вихрь Д.А.", type: "Практика" },
+            { day: 5, start: "10:45", end: "12:15", subject: "Магическая лингвистика", room: "A-210", teacher: "доц. Мусса Б.К.", type: "Лекция" }
+          ],
+          overrides: [
+            { date: moveDate, day: moveDay, start: "10:45", status: "moved", 
+              oldRoom: "A-210", newRoom: "C-305", newTime: "13:30",
+              note: "Перенос из-за технической проблемы" }
+          ]
+        },
+        u_sky: {
+          regular: [
+            { day: 1, start: "08:30", end: "10:00", subject: "Высшая стихийная математика", room: "C-501", teacher: "проф. Квантум Р.Т.", type: "Лекция" },
+            { day: 1, start: "10:15", end: "11:45", subject: "Алгоритмы заклинаний", room: "C-405", teacher: "доц. Бинариус О.П.", type: "Практика" },
+            { day: 2, start: "09:00", end: "10:30", subject: "Инженерная графика рун", room: "A-112", teacher: "ст.пр. Чертёжников В.И.", type: "Семинар" },
+            { day: 2, start: "13:00", end: "14:30", subject: "Физика элементалей", room: "B-310", teacher: "проф. Пламеневский Г.Ю.", type: "Лекция" },
+            { day: 3, start: "10:00", end: "11:30", subject: "Базы магических данных", room: "C-408", teacher: "доц. Кристалл С.А.", type: "Лекция" },
+            { day: 3, start: "11:45", end: "13:15", subject: "Базы магических данных (лаб.)", room: "C-410", teacher: "доц. Кристалл С.А.", type: "Лаб. работа" },
+            { day: 4, start: "08:30", end: "10:00", subject: "Алгоритмы заклинаний", room: "C-405", teacher: "доц. Бинариус О.П.", type: "Лекция" },
+            { day: 4, start: "10:15", end: "11:45", subject: "Моделирование стихий", room: "B-315", teacher: "проф. Векторова Н.Л.", type: "Практика" },
+            { day: 5, start: "09:00", end: "10:30", subject: "История инженерной магии", room: "S-201", teacher: "проф. Архивариус М.Ф.", type: "Лекция" },
+            { day: 5, start: "13:00", end: "14:30", subject: "Физика элементалей (лаб.)", room: "B-312", teacher: "проф. Пламеневский Г.Ю.", type: "Лаб. работа" }
+          ],
+          overrides: [
+            { date: moveDate, day: moveDay, start: "10:15", status: "moved",
+              oldRoom: "C-405", newRoom: "B-215", newTime: "",
+              note: "Замена аудитории по запросу преподавателя" }
+          ]
+        },
+        u_faragonda: {
+          regular: [
+            { day: 1, start: "10:00", end: "11:30", subject: "Основы аркано-лингвистики", room: "A-101", group: "АЛ-204", type: "Лекция" },
+            { day: 1, start: "13:00", end: "14:30", subject: "Теория магических систем", room: "A-101", group: "СИ-301", type: "Лекция" },
+            { day: 2, start: "10:00", end: "11:30", subject: "Основы аркано-лингвистики (сем.)", room: "A-105", group: "АЛ-204", type: "Семинар" },
+            { day: 3, start: "11:00", end: "12:30", subject: "Теория магических систем (сем.)", room: "A-101", group: "СИ-301", type: "Семинар" },
+            { day: 4, start: "10:00", end: "11:30", subject: "Основы аркано-лингвистики", room: "A-101", group: "АЛ-204", type: "Лекция" },
+            { day: 5, start: "14:00", end: "15:30", subject: "Консультация", room: "A-101", group: "Все", type: "Консультация" }
+          ],
+          overrides: []
+        }
+      },
+      grades: {
+        u_stella: [
+          { subject: "Древние руны", points: 82, max: 100, control: "Экзамен", deadline: "18.12.2026" },
+          { subject: "Магическая лингвистика", points: 91, max: 100, control: "Экзамен", deadline: "22.12.2026" },
+          { subject: "История волшебных культур", points: 74, max: 100, control: "Зачёт", deadline: "15.12.2026" },
+          { subject: "Каллиграфия символов", points: 88, max: 100, control: "Зачёт", deadline: "12.12.2026" },
+          { subject: "Философия магии", points: 55, max: 100, control: "Зачёт", deadline: "20.12.2026" },
+          { subject: "Английский (магический)", points: 95, max: 100, control: "Зачёт", deadline: "10.12.2026" },
+          { subject: "Основы аркано-лингвистики", points: 87, max: 100, control: "Экзамен", deadline: "20.12.2026" }
+        ],
+        u_sky: [
+          { subject: "Высшая стихийная математика", points: 78, max: 100, control: "Экзамен", deadline: "19.12.2026" },
+          { subject: "Алгоритмы заклинаний", points: 85, max: 100, control: "Экзамен", deadline: "23.12.2026" },
+          { subject: "Физика элементалей", points: 58, max: 100, control: "Экзамен", deadline: "20.12.2026" },
+          { subject: "Базы магических данных", points: 93, max: 100, control: "Экзамен", deadline: "24.12.2026" },
+          { subject: "Инженерная графика рун", points: 81, max: 100, control: "Зачёт", deadline: "14.12.2026" },
+          { subject: "Моделирование стихий", points: 67, max: 100, control: "Зачёт", deadline: "16.12.2026" },
+          { subject: "Теория магических систем", points: 74, max: 100, control: "Экзамен", deadline: "21.12.2026" }
+        ],
+        u_bloom: [
+          { subject: "Магическая физика", points: 76, max: 100, control: "Экзамен", deadline: "19.12.2026" },
+          { subject: "Теория магических систем", points: 82, max: 100, control: "Экзамен", deadline: "21.12.2026" }
+        ],
+        u_flora: [
+          { subject: "Био-энергетика", points: 88, max: 100, control: "Экзамен", deadline: "18.12.2026" }
+        ],
+        u_musa: [
+          { subject: "История лингвистики", points: 91, max: 100, control: "Экзамен", deadline: "17.12.2026" },
+          { subject: "Основы аркано-лингвистики", points: 79, max: 100, control: "Экзамен", deadline: "20.12.2026" }
+        ],
+        u_tecna: [
+          { subject: "Алгоритмы заклинаний", points: 94, max: 100, control: "Экзамен", deadline: "23.12.2026" },
+          { subject: "Теория магических систем", points: 88, max: 100, control: "Экзамен", deadline: "21.12.2026" }
+        ],
+        u_leila: [
+          { subject: "Магическая лингвистика", points: 85, max: 100, control: "Экзамен", deadline: "22.12.2026" },
+          { subject: "Основы аркано-лингвистики", points: 72, max: 100, control: "Экзамен", deadline: "20.12.2026" }
+        ],
+        u_riven: [
+          { subject: "Тёмная магия", points: 69, max: 100, control: "Экзамен", deadline: "20.12.2026" },
+          { subject: "Теория магических систем", points: 58, max: 100, control: "Экзамен", deadline: "21.12.2026" }
+        ],
+        u_brandon: [
+          { subject: "Стихийная инженерия", points: 77, max: 100, control: "Экзамен", deadline: "19.12.2026" },
+          { subject: "Теория магических систем", points: 81, max: 100, control: "Экзамен", deadline: "21.12.2026" }
+        ],
+        u_timmy: [
+          { subject: "Компьютерная магия", points: 92, max: 100, control: "Экзамен", deadline: "18.12.2026" },
+          { subject: "Основы аркано-лингвистики", points: 65, max: 100, control: "Экзамен", deadline: "20.12.2026" }
+        ]
+      },
+      applications: {
+        u_stella: [
+          { id: "a1", userId: "u_stella", type: "Справка об обучении", status: "Готова к выдаче", createdAt: "2026-11-10", note: "Для предоставления по месту требования" },
+          { id: "a2", userId: "u_stella", type: "Копия зачётки", status: "В работе", createdAt: "2026-11-18", note: "" }
+        ],
+        u_sky: [
+          { id: "a3", userId: "u_sky", type: "Справка в военкомат", status: "Принята", createdAt: "2026-11-19", note: "Форма № 26-У" }
+        ]
+      },
+      notifications: {
+        u_stella: [
+          { id: "n1", title: "📅 Изменение расписания", body: "Пара «Магическая лингвистика» перенесена на " + moveDate + " с 10:45 на 13:30, аудитория C-305 (вместо A-210). Причина: техническая проблема.", date: fmt(today), read: false, type: "schedule" },
+          { id: "n2", title: "Дедлайн: курсовая по каллиграфии", body: "Напоминание: сдать работу до 12 декабря.", date: "2026-11-20", read: false, type: "deadline" }
+        ],
+        u_sky: [
+          { id: "n3", title: "📅 Изменение расписания", body: "Пара «Алгоритмы заклинаний» перенесена на " + moveDate + " в аудиторию B-215 (вместо C-405). Причина: замена аудитории по запросу преподавателя.", date: fmt(today), read: false, type: "schedule" },
+          { id: "n4", title: "Лабораторная по физике элементалей", body: "Не забудьте отчёт по ЛР №4 — срок до 25 ноября.", date: "2026-11-20", read: false, type: "deadline" }
+        ]
+      },
+      rooms: [
+        { building: "A", room: "A-101", type: "Коворкинг", freeUntil: "18:00", capacity: 24 },
+        { building: "A", room: "A-210", type: "Учебная аудитория", freeUntil: "14:30", capacity: 30 },
+        { building: "A", room: "A-312", type: "Лингафонный кабинет", freeUntil: "20:00", capacity: 18 },
+        { building: "B", room: "B-208", type: "Учебная аудитория", freeUntil: "16:00", capacity: 25 },
+        { building: "B", room: "B-402", type: "Лекционная", freeUntil: "12:30", capacity: 80 },
+        { building: "B", room: "B-410", type: "Коворкинг", freeUntil: "21:00", capacity: 40 },
+        { building: "C", room: "C-105", type: "Лаборатория", freeUntil: "15:00", capacity: 16 },
+        { building: "C", room: "C-408", type: "Компьютерный класс", freeUntil: "19:30", capacity: 22 },
+        { building: "S", room: "S-102", type: "Лекционная", freeUntil: "17:00", capacity: 60 },
+        { building: "S", room: "S-301", type: "Коворкинг", freeUntil: "22:00", capacity: 50 }
+      ],
+      buddies: [
+        { id: "b1", authorId: "u_stella", authorName: "Стелла С. (АЛ-204)", title: "Подготовка к экзамену по рунам", body: "Ищу компанию для повторения рунных формул. Встречаемся в B-410 по вечерам.", tags: ["руны","экзамен"], date: "2026-11-19", replies: [] },
+        { id: "b2", authorId: "u_sky", authorName: "Скай Э. (СИ-301)", title: "Хакатон «Стихийный код» — команда", body: "Собираю команду 3–4 человека. Нужны: ML-инженер и дизайнер. Опыт в стихийных вычислениях приветствуется.", tags: ["хакатон","команда"], date: "2026-11-20", replies: [] },
+        { id: "b3", authorId: "u_bloom", authorName: "Блум Д. (СИ-202)", title: "Ищу напарника для подготовки к коллоквиуму по Магической физике", body: "Готовлюсь к коллоквиуму в четверг. Ищу одного-двух человек для совместного разбора задач. Встречаемся в корпусе B, аудитория 215.", tags: ["физика","коллоквиум","корпус_B"], date: "2026-11-20", replies: [] },
+        { id: "b4", authorId: "u_tecna", authorName: "Текна З. (СИ-301)", title: "Собираю команду на хакатон по алгоритмам и аркано-программированию", body: "Регистрация до 25 ноября. Нужны: бэкенд-разработчик, дизайнер интерфейсов и тестировщик. Призовой фонд 150 000 ₽.", tags: ["код","хакатон","проект"], date: "2026-11-21", replies: [] },
+        { id: "b5", authorId: "u_musa", authorName: "Муза М. (АЛ-204)", title: "Кто хочет вместе разобрать билеты по истории лингвистики в коворкинге?", body: "Собираемся в субботу в 14:00 в коворкинге S-301. У меня есть конспекты и старые билеты. Берите чай и печенье!", tags: ["лингвистика","экзамен","коворкинг"], date: "2026-11-21", replies: [] },
+        { id: "b6", authorId: "u_flora", authorName: "Флора Л. (БЭ-201)", title: "Нужна помощь с лабораторной по био-энергетике, угощу кофе в буфете", body: "Не могу разобраться с третьей частью лабы (расчёт энергетического поля). Кто силён в био-энергетике — напишите, встретимся в буфете корпуса C.", tags: ["лаба","помощь"], date: "2026-11-21", replies: [] }
+      ],
+      announcements: [],
+      appeals: {
+        u_stella: [
+          {
+            id: "ap1",
+            userId: "u_stella",
+            topic: "Стипендия",
+            message: "Здравствуйте! Подскажите, пожалуйста, когда будет начислена академическая стипендия за ноябрь? В личном кабинете статус не меняется уже неделю.",
+            status: "В работе",
+            createdAt: "2026-11-18",
+            replies: [
+              {
+                from: "staff",
+                author: "Дежурный специалист деканата",
+                text: "Добрый день, Стелла! Ваше обращение принято в работу, номер #104. Специалист по стипендиям проверит информацию и ответит в течение рабочего дня. Обычно начисление происходит до 25 числа.",
+                date: "2026-11-18"
+              }
+            ]
+          }
+        ],
+        u_sky: [
+          {
+            id: "ap2",
+            userId: "u_sky",
+            topic: "Учебный процесс",
+            message: "Прошу уточнить, можно ли сдать лабораторную работу по физике элементалей досрочно, так как я ухожу в академический отпуск с 1 декабря.",
+            status: "Решено",
+            createdAt: "2026-11-15",
+            replies: [
+              {
+                from: "staff",
+                author: "Дежурный специалист деканата",
+                text: "Здравствуйте, Скай! Обращение принято в работу, номер #087. Да, досрочная сдача возможна — обратитесь к преподавателю Пламеневскому Г.Ю. до 28 ноября.",
+                date: "2026-11-15"
+              },
+              {
+                from: "user",
+                author: "Скай Э.",
+                text: "Спасибо! А если преподаватель будет недоступен, можно ли сдать через онлайн-форму?",
+                date: "2026-11-16"
+              },
+              {
+                from: "staff",
+                author: "Дежурный специалист деканата",
+                text: "Да, в этом случае отправьте работу на p.plamenevsky@edu.alfea.magic с пометкой «Досрочная сдача». Деканат уведомит преподавателя.",
+                date: "2026-11-16"
+              }
+            ]
+          }
+        ]
+      },
+      appointments: {
+        u_stella: [
+          {
+            id: "apt1",
+            userId: "u_stella",
+            reason: "Вопрос по переводу на бюджет",
+            date: fmt(tomorrow),
+            time: "11:30",
+            room: "Корпус A, каб. 101",
+            status: "active",
+            ticketNumber: "АЛФ-0247",
+            createdAt: "2026-11-20"
+          }
+        ],
+        u_sky: []
+      }
+    };
+    saveDB(db);
+    localStorage.setItem(DB_VERSION_KEY, String(CURRENT_DB_VERSION));
+    console.log('[DB] БД создана, версия:', CURRENT_DB_VERSION);
+    return db;
+  }
+
+  var sleep = function(ms) { return new Promise(function(r){ setTimeout(r, ms); }); };
+
+  function getSafeUser(user) {
+    var safe = {};
+    for (var key in user) {
+      if (key !== 'passwordHash') safe[key] = user[key];
+    }
+    return safe;
+  }
+
+  async function apiLogin(login, password) {
+    await sleep(250);
+    var db = loadDB();
+    var user = db.users.find(function(u){ return u.login === login; });
+    if (!user) return { ok: false, error: "Неверный логин или пароль" };
+    var hash = sha256(password);
+    if (hash !== user.passwordHash) return { ok: false, error: "Неверный логин или пароль" };
+    var payload = { sub: user.id, login: user.login, role: user.role, exp: Date.now() + 1000*60*60*8 };
+    var token = signToken(payload);
+    console.log('[API /login] Роль:', user.role);
+    return { ok: true, token: token, user: getSafeUser(user) };
+  }
+  
+  async function apiMe(token) {
+    var p = verifyToken(token);
+    if (!p) return { ok: false, status: 401, error: "Сессия истекла" };
+    var db = loadDB();
+    var user = db.users.find(function(u){ return u.id === p.sub; });
+    if (!user) return { ok: false, status: 403, error: "Пользователь не найден" };
+    return { ok: true, user: getSafeUser(user) };
+  }
+
+  function requireStaff(token) {
+    var p = verifyToken(token);
+    if (!p) return { ok: false, status: 401, error: "Сессия истекла" };
+    if (p.role !== 'staff') return { ok: false, status: 403, error: "Доступ запрещён: только для преподавателей" };
+    var db = loadDB();
+    var user = db.users.find(function(u){ return u.id === p.sub; });
+    if (!user) return { ok: false, status: 403, error: "Пользователь не найден" };
+    return { ok: true, payload: p, user: user, db: db };
+  }
+
+  async function apiStaffProfile(token) {
+    var r = requireStaff(token);
+    if (!r.ok) return r;
+    var db = r.db;
+    var today = new Date();
+    var dayIdx = (today.getDay()+6)%7 + 1;
+    var staffSchedule = db.schedule[r.user.id];
+    var todayLessons = (staffSchedule && staffSchedule.regular) ? staffSchedule.regular.filter(function(l){ return l.day === dayIdx; }) : [];
+    var newApplications = 0;
+    var lowGradeStudents = [];
+    for (var uid in db.applications) {
+      db.applications[uid].forEach(function(a){ if (a.status === 'Принята') newApplications++; });
+    }
+    for (var uid in db.grades) {
+      var user = db.users.find(function(u){ return u.id === uid; });
+      if (!user || user.role !== 'student') continue;
+      var hasLow = db.grades[uid].some(function(g){ return g.points < 60; });
+      if (hasLow) lowGradeStudents.push(user.fullName + ' (' + user.group + ')');
+    }
+    return { ok: true, data: {
+      user: getSafeUser(r.user),
+      todayLessonsCount: todayLessons.length,
+      newApplicationsCount: newApplications,
+      lowGradeStudents: lowGradeStudents
+    }};
+  }
+
+  async function apiStaffSchedule(token) {
+    var r = requireStaff(token);
+    if (!r.ok) return r;
+    var db = r.db;
+    var schedule = db.schedule[r.user.id] || { regular: [], overrides: [] };
+    return { ok: true, data: schedule };
+  }
+
+  async function apiStaffUpdateSchedule(token, day, start, action, data) {
+    var r = requireStaff(token);
+    if (!r.ok) return r;
+    var db = r.db;
+    if (!db.schedule[r.user.id]) db.schedule[r.user.id] = { regular: [], overrides: [] };
+    if (!db.schedule[r.user.id].overrides) db.schedule[r.user.id].overrides = [];
+    var today = new Date();
+    var monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay()+6)%7));
+    var targetDate = new Date(monday); targetDate.setDate(monday.getDate() + (day - 1));
+    var iso = targetDate.toISOString().slice(0,10);
+    db.schedule[r.user.id].overrides = db.schedule[r.user.id].overrides.filter(function(o){
+      return !(o.date === iso && o.day === day && o.start === start);
+    });
+    if (action === 'cancel') {
+      db.schedule[r.user.id].overrides.push({ date: iso, day: day, start: start, status: 'cancelled', note: data.note || '' });
+    } else if (action === 'move') {
+      db.schedule[r.user.id].overrides.push({ date: iso, day: day, start: start, status: 'moved', newRoom: data.newRoom || '', newTime: data.newTime || '', note: data.note || '' });
+    }
+    saveDB(db);
+    return { ok: true };
+  }
+
+  async function apiStaffGrades(token) {
+    var r = requireStaff(token);
+    if (!r.ok) return r;
+    var db = r.db;
+    var staffSubjects = r.user.subjects || ["Основы аркано-лингвистики", "Теория магических систем"];
+    var students = db.users.filter(function(u){ return u.role === 'student'; }).map(function(u){
+      var allGrades = db.grades[u.id] || [];
+      var filteredGrades = allGrades.filter(function(g){ return staffSubjects.indexOf(g.subject) !== -1; });
+      return { id: u.id, fullName: u.fullName, group: u.group, grades: filteredGrades };
+    }).filter(function(s){ return s.grades.length > 0; });
+    return { ok: true, data: students, subjects: staffSubjects };
+  }
+
+  async function apiStaffUpdateGrade(token, studentId, subject, points) {
+    var r = requireStaff(token);
+    if (!r.ok) return r;
+    var db = r.db;
+    if (!db.grades[studentId]) return { ok: false, error: "Студент не найден" };
+    var grade = db.grades[studentId].find(function(g){ return g.subject === subject; });
+    if (!grade) return { ok: false, error: "Предмет не найден" };
+    grade.points = Math.max(0, Math.min(100, points));
+    saveDB(db);
+    return { ok: true, data: grade };
+  }
+
+  async function apiStaffAnnouncements(token) {
+    var r = requireStaff(token);
+    if (!r.ok) return r;
+    var db = r.db;
+    return { ok: true, data: db.announcements || [] };
+  }
+
+  async function apiStaffCreateAnnouncement(token, title, body, targetGroup) {
+    var r = requireStaff(token);
+    if (!r.ok) return r;
+    var db = r.db;
+    if (!db.announcements) db.announcements = [];
+    var ann = {
+      id: "ann"+Date.now(),
+      authorId: r.user.id,
+      authorName: r.user.fullName,
+      title: title, body: body,
+      targetGroup: targetGroup || 'all',
+      date: new Date().toISOString().slice(0,10)
+    };
+    db.announcements.unshift(ann);
+    db.users.forEach(function(u){
+      if (u.role !== 'student') return;
+      if (targetGroup && targetGroup !== 'all' && u.group !== targetGroup) return;
+      if (!db.notifications[u.id]) db.notifications[u.id] = [];
+      db.notifications[u.id].unshift({
+        id: "n"+Date.now()+Math.random().toString(36).slice(2,6),
+        title: "📢 " + title,
+        body: body,
+        date: ann.date,
+        read: false, type: "news"
+      });
+    });
+    saveDB(db);
+    console.log('[API] Объявление создано:', ann);
+    return { ok: true, data: ann };
+  }
+
+  async function apiGetSchedule(token) {
+    await sleep(200);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403, error:"Доступ запрещён" };
+    var db = loadDB();
+    if (!db.schedule[p.sub]) return { ok:false, status:403 };
+    return { ok:true, data: db.schedule[p.sub] };
+  }
+  async function apiGetGrades(token) {
+    await sleep(200);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    if (!db.grades[p.sub]) return { ok:false, status:403 };
+    return { ok:true, data: db.grades[p.sub] };
+  }
+  async function apiGetApplications(token) {
+    await sleep(150);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    return { ok:true, data: db.applications[p.sub] || [] };
+  }
+  async function apiCreateApplication(token, type, note) {
+    await sleep(300);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    if (!db.applications[p.sub]) db.applications[p.sub] = [];
+    var app = { id: "a"+Date.now(), userId: p.sub, type: type, status: "Принята", createdAt: new Date().toISOString().slice(0,10), note: note || "" };
+    db.applications[p.sub].unshift(app);
+    saveDB(db);
+    console.log('[API] Заявка создана:', app);
+    return { ok:true, data: app };
+  }
+  async function apiGetNotifications(token) {
+    await sleep(150);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    return { ok:true, data: db.notifications[p.sub] || [] };
+  }
+  async function apiMarkNotificationRead(token, id) {
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    var db = loadDB();
+    var list = db.notifications[p.sub] || [];
+    var n = list.find(function(x){ return x.id === id; });
+    if (!n) return { ok:false, status:403 };
+    n.read = true; saveDB(db);
+    return { ok:true };
+  }
+  async function apiGetRooms(token, building) {
+    await sleep(200);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    var data = building && building !== "ALL" ? db.rooms.filter(function(r){ return r.building === building; }) : db.rooms;
+    return { ok:true, data: data };
+  }
+  async function apiGetBuddies(token) {
+    await sleep(200);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    return { ok:true, data: db.buddies || [] };
+  }
+  async function apiCreateBuddy(token, title, body, tags) {
+    await sleep(300);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    var me = db.users.find(function(u){ return u.id === p.sub; });
+    var b = { id:"b"+Date.now(), authorId: me.id, authorName: me.fullName.split(" ")[0]+" "+me.fullName.split(" ")[1][0]+". ("+me.group+")", title: title, body: body, tags: tags||[], date: new Date().toISOString().slice(0,10), replies: [] };
+    if (!db.buddies) db.buddies = [];
+    db.buddies.unshift(b); saveDB(db);
+    return { ok:true, data: b };
+  }
+  async function apiReplyBuddy(token, buddyId, text) {
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    var b = (db.buddies||[]).find(function(x){ return x.id === buddyId; });
+    if (!b) return { ok:false, status:403 };
+    var me = db.users.find(function(u){ return u.id === p.sub; });
+    if (!b.replies) b.replies = [];
+    b.replies.push({ id:"r"+Date.now(), author: me.fullName.split(" ")[0], text: text, date: new Date().toISOString().slice(0,10) });
+    saveDB(db);
+    return { ok:true };
+  }
+  async function apiAssistant(token, message) {
+    await sleep(500);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    var user = db.users.find(function(u){ return u.id === p.sub; });
+    var grades = db.grades[p.sub] || [];
+    var notifs = db.notifications[p.sub] || [];
+    var schedule = db.schedule[p.sub];
+    var now = new Date();
+    var dayIdx = (now.getDay()+6)%7 + 1;
+    var nowMin = now.getHours()*60 + now.getMinutes();
+    function parseTime(t) { var parts = t.split(":").map(Number); return parts[0]*60+parts[1]; }
+    var low = message.toLowerCase();
+    var answer = "";
+    if (/привет|здравств|добр|хай|hello/.test(low)) {
+      answer = "Привет, "+user.fullName.split(" ")[0]+"! ✨ Я — Алфея Ассистент.";
+    } else if (/пар|логин|password|вход/.test(low)) {
+      answer = "Твои данные:\n• Логин: "+user.login+"\n• Пароль: "+(user.login==='stella'?'Solaria2026':'Eraklyon2026');
+    } else if (/распис|пара|пары|сегодня|занят/.test(low)) {
+      var todayLessons = (schedule.regular||[]).filter(function(l){ return l.day === dayIdx; });
+      if (todayLessons.length === 0) answer = "Сегодня нет пар 🌙";
+      else {
+        var upcoming = todayLessons.filter(function(l){ return parseTime(l.start) > nowMin; }).sort(function(a,b){ return parseTime(a.start)-parseTime(b.start); });
+        var current = todayLessons.find(function(l){ return parseTime(l.start) <= nowMin && parseTime(l.end) > nowMin; });
+        if (current) answer = "Сейчас: "+current.subject+" ("+current.start+"–"+current.end+"), "+current.room;
+        else if (upcoming[0]) { var n = upcoming[0]; answer = "Ближайшая: "+n.subject+" в "+n.start+", "+n.room; }
+        else answer = "Все пары прошли.";
+      }
+    } else if (/балл|брс|оценк|средн/.test(low)) {
+      var avg = grades.reduce(function(s,g){ return s+g.points; },0) / (grades.length||1);
+      answer = "Средний балл: "+avg.toFixed(1)+" из 100.";
+    } else if (/дедлайн|сдач|срок|экзам|сесс/.test(low)) {
+      var upcoming = grades.slice().sort(function(a,b){
+        var da=a.deadline.split(".").map(Number); var db2=b.deadline.split(".").map(Number);
+        return new Date(da[2],da[1]-1,da[0]) - new Date(db2[2],db2[1]-1,db2[0]);
+      }).slice(0,3);
+      answer = "Дедлайны:\n" + upcoming.map(function(g){ return "• "+g.deadline+" — "+g.subject; }).join("\n");
+    } else if (/справк|заявк|заказ|деканат|обращен|приём|талон/.test(low)) {
+      answer = "Раздел «Заявки» → вкладка «Связь с деканатом». Там можно написать обращение, записаться на приём или посмотреть контакты.";
+    } else {
+      answer = "Спроси про расписание, баллы, дедлайны, справки или связь с деканатом.";
+    }
+    return { ok:true, answer: answer };
+  }
+
+  // ===== НОВЫЕ API: Связь с деканатом =====
+  async function apiGetAppeals(token) {
+    await sleep(200);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    return { ok:true, data: db.appeals[p.sub] || [] };
+  }
+
+  async function apiCreateAppeal(token, topic, message) {
+    await sleep(350);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    if (!db.appeals[p.sub]) db.appeals[p.sub] = [];
+    
+    var appealNum = 100 + db.appeals[p.sub].length + Math.floor(Math.random()*90);
+    var appeal = {
+      id: "ap"+Date.now(),
+      userId: p.sub,
+      topic: topic,
+      message: message,
+      status: "В работе",
+      createdAt: new Date().toISOString().slice(0,10),
+      replies: [
+        {
+          from: "staff",
+          author: "Дежурный специалист деканата",
+          text: "Здравствуйте! Ваше обращение принято в работу, номер #" + appealNum + ". Специалист ответит в течение рабочего дня. Спасибо за обращение в деканат Академии Алфея! ✨",
+          date: new Date().toISOString().slice(0,10)
+        }
+      ]
+    };
+    db.appeals[p.sub].unshift(appeal);
+    saveDB(db);
+    console.log('[API] Обращение создано:', appeal);
+    return { ok:true, data: appeal, appealNumber: appealNum };
+  }
+
+  async function apiReplyAppeal(token, appealId, text) {
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    var list = db.appeals[p.sub] || [];
+    var appeal = list.find(function(a){ return a.id === appealId; });
+    if (!appeal) return { ok:false, status:404, error: "Обращение не найдено" };
+    var me = db.users.find(function(u){ return u.id === p.sub; });
+    if (!appeal.replies) appeal.replies = [];
+    appeal.replies.push({
+      from: "user",
+      author: me.fullName.split(" ")[0] + " " + me.fullName.split(" ")[1][0] + ".",
+      text: text,
+      date: new Date().toISOString().slice(0,10)
+    });
+    saveDB(db);
+    return { ok:true };
+  }
+
+  async function apiGetAppointments(token) {
+    await sleep(200);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    return { ok:true, data: db.appointments[p.sub] || [] };
+  }
+
+  async function apiCreateAppointment(token, reason, date, time) {
+    await sleep(350);
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    if (!db.appointments[p.sub]) db.appointments[p.sub] = [];
+    
+    var ticketNum = "АЛФ-" + String(Math.floor(1000 + Math.random()*9000));
+    var apt = {
+      id: "apt"+Date.now(),
+      userId: p.sub,
+      reason: reason,
+      date: date,
+      time: time,
+      room: "Корпус A, каб. 101",
+      status: "active",
+      ticketNumber: ticketNum,
+      createdAt: new Date().toISOString().slice(0,10)
+    };
+    db.appointments[p.sub].unshift(apt);
+    saveDB(db);
+    console.log('[API] Запись создана:', apt);
+    return { ok:true, data: apt };
+  }
+
+  async function apiCancelAppointment(token, appointmentId) {
+    var p = verifyToken(token); if (!p) return { ok:false, status:401 };
+    if (p.role !== 'student') return { ok:false, status:403 };
+    var db = loadDB();
+    var list = db.appointments[p.sub] || [];
+    var apt = list.find(function(a){ return a.id === appointmentId; });
+    if (!apt) return { ok:false, status:404, error: "Запись не найдена" };
+    apt.status = "cancelled";
+    saveDB(db);
+    return { ok:true };
+  }
+
+  var root = document.getElementById('root');
+  var state = {
+    token: localStorage.getItem(TOKEN_KEY),
+    user: null,
+    page: null,
+    loading: true,
+    bootErr: null,
+    chatOpen: false,
+    chatMessages: [],
+    chatInput: '',
+    chatLoading: false,
+    scheduleMode: 'today',
+    scheduleData: null,
+    scheduleLoading: true,
+    grades: null,
+    gradesLoading: true,
+    apps: [],
+    appsLoading: true,
+    appsTab: 'certificates', // 'certificates' | 'contact'
+    showAppForm: false,
+    appType: 'Справка об обучении',
+    appNote: '',
+    appSubmitting: false,
+    notifs: [],
+    notifsLoading: true,
+    rooms: [],
+    roomsLoading: true,
+    roomBuilding: 'ALL',
+    buddies: [],
+    buddiesLoading: true,
+    showBuddyForm: false,
+    buddyTitle: '',
+    buddyBody: '',
+    buddyTags: '',
+    replyTo: null,
+    replyText: '',
+    campusTab: 'rooms',
+    // Связь с деканатом
+    appeals: [],
+    appealsLoading: true,
+    showAppealForm: false,
+    appealTopic: 'Стипендия',
+    appealMessage: '',
+    appealSubmitting: false,
+    appealReplyId: null,
+    appealReplyText: '',
+    appointments: [],
+    appointmentsLoading: true,
+    showAppointmentForm: false,
+    aptReason: 'Учебный процесс',
+    aptDate: '',
+    aptTime: '',
+    aptSubmitting: false,
+    lastCreatedTicket: null,
+    // Staff
+    staffProfile: null,
+    staffProfileLoading: true,
+    staffSchedule: null,
+    staffScheduleLoading: true,
+    staffGrades: null,
+    staffGradesLoading: true,
+    staffGradesSubject: 'all',
+    staffGradesSubjects: [],
+    staffAnnouncements: null,
+    staffAnnouncementsLoading: true,
+    annTitle: '',
+    annBody: '',
+    annTarget: 'all',
+    showForgotPassword: false,
+    forgotPasswordLogin: '',
+    forgotPasswordSent: false,
+    moveModal: null
+  };
+
+  function showToast(message, type) {
+    type = type || 'info';
+    var container = document.getElementById('toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    var iconMap = { success: 'check', error: 'alert', info: 'sparkles' };
+    toast.innerHTML = icon(iconMap[type] || 'info', '', 16) + '<span class="text-wrap">' + message + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 3000);
+  }
+
+  function autoLoadCurrentPage() {
+    if (!state.user) return;
+    if (state.user.role === 'staff') {
+      if (state.page === 'staff-profile') loadStaffProfile();
+      else if (state.page === 'staff-schedule') loadStaffSchedule();
+      else if (state.page === 'staff-grades') loadStaffGrades();
+      else if (state.page === 'staff-announcements') loadStaffAnnouncements();
+    } else {
+      if (state.page === 'profile') { /* данные уже в state.user */ }
+      else if (state.page === 'schedule') loadSchedule();
+      else if (state.page === 'grades') loadGrades();
+      else if (state.page === 'apps') { loadApps(); loadAppeals(); loadAppointments(); }
+      else if (state.page === 'notifs') loadNotifs();
+      else if (state.page === 'campus') { loadRooms(); loadBuddies(); }
+    }
+  }
+
+  function render() {
+    if (state.bootErr) {
+      root.innerHTML = '<div style="padding:24px;color:#f87171;text-align:center;max-width:400px;margin:100px auto"><h2>Ошибка</h2><p style="margin-top:12px;color:#D8B4FE">'+state.bootErr+'</p><button class="btn-accent" style="margin-top:20px" onclick="location.reload()">Перезагрузить</button></div>';
+      return;
+    }
+    if (state.loading) {
+      root.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center"><div style="text-align:center"><svg width="56" height="56" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EC4899"/><stop offset="100%" stop-color="#F472B6"/></linearGradient></defs><path d="M32 4 L52 22 L44 60 L20 60 L12 22 Z" stroke="url(#lg1)" stroke-width="2" fill="rgba(236,72,153,0.15)"/><circle cx="32" cy="30" r="3" fill="#EC4899"/></svg><div style="color:#D8B4FE;margin-top:16px;font-size:14px">Инициализация...</div></div></div>';
+      return;
+    }
+    if (!state.token || !state.user) {
+      renderLogin();
+      if (state.showForgotPassword) renderForgotPasswordModal();
+      return;
+    }
+    if (state.user.role === 'staff') {
+      document.body.classList.add('staff-mode');
+      if (!state.page || !state.page.startsWith('staff-')) state.page = 'staff-profile';
+      renderStaffApp();
+    } else {
+      document.body.classList.remove('staff-mode');
+      if (!state.page || state.page.startsWith('staff-')) state.page = 'profile';
+      renderApp();
+    }
+    autoLoadCurrentPage();
+  }
+
+  function renderLogin() {
+    document.body.classList.remove('staff-mode');
+    root.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px"><div style="width:100%;max-width:440px"><div style="display:flex;flex-direction:column;align-items:center;margin-bottom:32px"><svg width="72" height="72" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EC4899"/><stop offset="100%" stop-color="#F472B6"/></linearGradient></defs><path d="M32 4 L52 22 L44 60 L20 60 L12 22 Z" stroke="url(#lg1)" stroke-width="2" fill="rgba(236,72,153,0.15)"/><circle cx="32" cy="30" r="3" fill="#EC4899"/></svg><h1 style="font-size:24px;margin-top:16px;color:#F472B6;letter-spacing:0.5px">Академия Алфея</h1><p style="color:#D8B4FE;margin-top:4px;font-size:14px">Цифровой деканат</p></div><div class="glass" style="padding:28px"><h2 style="font-size:18px;margin-bottom:4px">Вход в личный кабинет</h2><p style="color:#D8B4FE;margin-bottom:20px;font-size:14px">Используй выданные учётные данные</p><div><div style="margin-bottom:16px"><label style="font-size:12px;color:#D8B4FE;display:block;margin-bottom:4px">Логин</label><input class="input" id="loginInput" placeholder="Введите логин" autocomplete="username"/></div><div style="margin-bottom:16px"><label style="font-size:12px;color:#D8B4FE;display:block;margin-bottom:4px">Пароль</label><input class="input" id="passwordInput" type="password" placeholder="Введите пароль" autocomplete="current-password"/></div><div id="loginErr"></div><button class="btn-accent" id="loginBtn" style="width:100%;padding:12px;display:flex;align-items:center;justify-content:center;gap:8px"><span id="loginBtnContent">'+icon('lock','',16)+' Войти</span></button><div style="text-align:center;margin-top:16px"><button class="btn-link" id="forgotPasswordBtn">Забыли пароль?</button></div></div></div><p style="font-size:11px;color:#B89CD8;text-align:center;margin-top:20px;padding:0 12px;line-height:1.6">Конкурсный прототип «Цифровой деканат будущего». Не является официальным сервисом вуза. Все данные вымышленные.</p></div></div>';
+
+    document.getElementById('loginBtn').addEventListener('click', doLogin);
+    document.getElementById('passwordInput').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+    document.getElementById('loginInput').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('passwordInput').focus(); });
+    document.getElementById('forgotPasswordBtn').addEventListener('click', function(){ state.showForgotPassword = true; render(); });
+  }
+
+  function renderForgotPasswordModal() {
+    var modalHtml = '<div class="modal-overlay" id="forgotPasswordModal"><div class="modal-content glass" style="padding:28px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><h2 style="font-size:18px">Восстановление доступа</h2><button class="btn-ghost" id="closeForgotModal" style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0">'+icon('x')+'</button></div>';
+    if (!state.forgotPasswordSent) {
+      modalHtml += '<p style="color:#D8B4FE;font-size:14px;margin-bottom:20px">Введите логин или номер студенческого билета</p>';
+      modalHtml += '<div style="margin-bottom:20px"><input class="input" id="forgotPasswordLoginInput" placeholder="Логин или номер студенческого" value="'+state.forgotPasswordLogin+'"/></div>';
+      modalHtml += '<div id="forgotPasswordErr"></div>';
+      modalHtml += '<button class="btn-accent" id="sendForgotPasswordBtn" style="width:100%;padding:12px;display:flex;align-items:center;justify-content:center;gap:8px">'+icon('mail','',16)+' Восстановить доступ</button>';
+    } else {
+      modalHtml += '<div style="text-align:center;padding:20px 0"><div style="width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">'+icon('check','emerald-text',32)+'</div><p style="color:#F3E8FF;font-size:14px;line-height:1.6;margin-bottom:12px">Инструкция по сбросу пароля отправлена на вашу учебную почту.</p><p style="color:#D8B4FE;font-size:13px;line-height:1.6">Если доступа к почте нет — обратитесь в единое окно деканата (корпус A, каб. 101)</p></div>';
+      modalHtml += '<button class="btn-ghost" id="closeForgotSuccessBtn" style="width:100%;padding:12px;margin-top:16px">Закрыть</button>';
+    }
+    modalHtml += '</div></div>';
+    root.insertAdjacentHTML('beforeend', modalHtml);
+
+    document.getElementById('closeForgotModal').addEventListener('click', function(){ state.showForgotPassword = false; state.forgotPasswordLogin = ''; state.forgotPasswordSent = false; render(); });
+    if (!state.forgotPasswordSent) {
+      document.getElementById('sendForgotPasswordBtn').addEventListener('click', function(){
+        var login = document.getElementById('forgotPasswordLoginInput').value.trim();
+        if (!login) { document.getElementById('forgotPasswordErr').innerHTML = '<div style="color:#f87171;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px;font-size:13px;margin-top:12px">Введите логин или номер студенческого</div>'; return; }
+        state.forgotPasswordLogin = login; state.forgotPasswordSent = true; render();
+      });
+      document.getElementById('forgotPasswordLoginInput').addEventListener('keydown', function(e){ if (e.key === 'Enter') document.getElementById('sendForgotPasswordBtn').click(); });
+    } else {
+      document.getElementById('closeForgotSuccessBtn').addEventListener('click', function(){ state.showForgotPassword = false; state.forgotPasswordLogin = ''; state.forgotPasswordSent = false; render(); });
+    }
+  }
+
+  async function doLogin() {
+    var login = document.getElementById('loginInput').value.trim();
+    var password = document.getElementById('passwordInput').value;
+    var errEl = document.getElementById('loginErr');
+    var btn = document.getElementById('loginBtn');
+    var content = document.getElementById('loginBtnContent');
+    errEl.innerHTML = '';
+    btn.disabled = true;
+    content.innerHTML = '<span class="spinner"></span> Входим...';
+    try {
+      var res = await apiLogin(login, password);
+      if (!res.ok) {
+        errEl.innerHTML = '<div style="color:#f87171;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px;font-size:13px;display:flex;align-items:start;gap:8px;margin-top:8px">'+icon('alert','',16)+res.error+'</div>';
+      } else {
+        localStorage.setItem(TOKEN_KEY, res.token);
+        state.token = res.token;
+        state.user = res.user;
+        if (res.user.role === 'staff') {
+          state.page = 'staff-profile';
+        } else {
+          state.page = 'profile';
+        }
+        state.chatMessages = [{ role:"bot", text:"Привет, "+res.user.fullName.split(" ")[0]+"! ✨" }];
+        console.log('[Login] Роль:', res.user.role, 'Вкладка:', state.page);
+        render();
+      }
+    } catch(e) {
+      errEl.innerHTML = '<div style="color:#f87171;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px;font-size:13px">Ошибка: '+e.message+'</div>';
+    }
+    btn.disabled = false;
+    content.innerHTML = icon('lock','',16)+' Войти';
+  }
+
+  function renderApp() {
+    var u = state.user;
+    var navItems = [
+      { id:'profile', label:'Профиль', icon:'user' },
+      { id:'schedule', label:'Пары', icon:'calendar' },
+      { id:'grades', label:'БРС', icon:'grad' },
+      { id:'apps', label:'Заявки', icon:'file' },
+      { id:'notifs', label:'Лента', icon:'bell' },
+      { id:'campus', label:'Кампус', icon:'map' }
+    ];
+    var currentPage = navItems.find(function(n){ return n.id === state.page; });
+    var pageTitles = {
+      profile: 'Добро пожаловать, '+u.fullName.split(' ')[0]+' ✨',
+      schedule: 'Расписание занятий',
+      grades: 'Успеваемость и БРС',
+      apps: 'Заявки и связь с деканатом',
+      notifs: 'Лента уведомлений',
+      campus: 'Кампус'
+    };
+
+    var html = '<div style="min-height:100vh;overflow-x:hidden">';
+    html += '<div style="position:fixed;top:0;left:0;right:0;z-index:40;padding:10px 12px;display:flex;align-items:center;gap:10px" id="topbar">';
+    html += '<svg width="26" height="26" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EC4899"/><stop offset="100%" stop-color="#F472B6"/></linearGradient></defs><path d="M32 4 L52 22 L44 60 L20 60 L12 22 Z" stroke="url(#lg1)" stroke-width="2" fill="rgba(236,72,153,0.15)"/><circle cx="32" cy="30" r="3" fill="#EC4899"/></svg>';
+    html += '<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#F472B6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Алфея</div><div style="font-size:10px;color:#D8B4FE;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(currentPage?currentPage.label:'')+'</div></div>';
+    html += '<span class="role-badge student">'+icon('user','',9)+' Студент</span>';
+    html += '<button class="btn-ghost" id="logoutBtn" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0">'+icon('logout','',13)+'</button>';
+    html += '</div>';
+
+    html += '<div class="page-container">';
+    html += '<div style="display:flex;flex-direction:column;gap:6px;padding:16px 0 20px">';
+    html += '<h1 style="font-size:22px;font-weight:700;line-height:1.3" class="text-wrap">'+pageTitles[state.page]+'</h1>';
+    html += '</div>';
+    html += '<div id="pageContent"></div></div>';
+
+    html += '<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;padding:4px 4px 6px 4px;background:rgba(47,29,78,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--card-border)">';
+    html += '<div style="display:grid;grid-template-columns:repeat(6,1fr);width:100%;gap:2px">';
+    navItems.forEach(function(n){
+      var active = state.page === n.id ? 'color:#F472B6;background:rgba(236,72,153,0.18)' : '';
+      html += '<div data-nav="'+n.id+'" class="nav-item" style="'+active+'">'+icon(n.icon,'',18)+'<span>'+n.label+'</span></div>';
+    });
+    html += '</div></div>';
+
+    html += '<footer style="padding:16px 12px 20px;max-width:1152px;margin:0 auto"><div style="font-size:10px;color:#B89CD8;text-align:center;line-height:1.5;border-top:1px solid rgba(252,231,243,0.2);padding-top:12px" class="text-wrap">Конкурсный прототип «Цифровой деканат будущего». Не является официальным сервисом вуза. Все данные вымышленные.<br/>© 2026 Академия Алфея</div></footer>';
+
+    if (!state.chatOpen) {
+      html += '<button class="floating-btn" id="chatOpenBtn" title="Алфея Ассистент">'+icon('sparkles','',20)+'</button>';
+    }
+
+    html += '</div>';
+    root.innerHTML = html;
+
+    document.querySelectorAll('[data-nav]').forEach(function(el){
+      el.addEventListener('click', function(){
+        state.page = el.getAttribute('data-nav');
+        render();
+      });
+    });
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', doLogout);
+    var chatOpenBtn = document.getElementById('chatOpenBtn');
+    if (chatOpenBtn) chatOpenBtn.addEventListener('click', function(){ state.chatOpen = true; renderChat(); });
+
+    renderPageContent();
+  }
+
+  function renderStaffApp() {
+    var u = state.user;
+    var navItems = [
+      { id:'staff-profile', label:'Профиль', icon:'user' },
+      { id:'staff-schedule', label:'Расписание', icon:'calendar' },
+      { id:'staff-grades', label:'БРС', icon:'grad' },
+      { id:'staff-announcements', label:'Объявл.', icon:'megaphone' }
+    ];
+    var currentPage = navItems.find(function(n){ return n.id === state.page; });
+    var pageTitles = {
+      'staff-profile': 'Панель управления',
+      'staff-schedule': 'Моё расписание',
+      'staff-grades': 'Журнал БРС',
+      'staff-announcements': 'Объявления'
+    };
+
+    var html = '<div style="min-height:100vh;overflow-x:hidden">';
+    html += '<div style="position:fixed;top:0;left:0;right:0;z-index:40;padding:10px 12px;display:flex;align-items:center;gap:10px" id="topbar">';
+    html += '<svg width="26" height="26" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#FBBF24"/></linearGradient></defs><path d="M32 4 L52 22 L44 60 L20 60 L12 22 Z" stroke="url(#lg1)" stroke-width="2" fill="rgba(245,158,11,0.15)"/><circle cx="32" cy="30" r="3" fill="#F59E0B"/></svg>';
+    html += '<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#FBBF24;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Алфея</div><div style="font-size:10px;color:#FDE68A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(currentPage?currentPage.label:'')+'</div></div>';
+    html += '<span class="role-badge">'+icon('crown','',9)+' Преподаватель</span>';
+    html += '<button class="btn-ghost" id="logoutBtn" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0">'+icon('logout','',13)+'</button>';
+    html += '</div>';
+
+    html += '<div class="page-container">';
+    html += '<div style="display:flex;flex-direction:column;gap:6px;padding:16px 0 20px">';
+    html += '<h1 style="font-size:22px;font-weight:700;line-height:1.3;color:#FDE68A" class="text-wrap">'+pageTitles[state.page]+'</h1>';
+    html += '</div>';
+    html += '<div id="pageContent"></div></div>';
+
+    html += '<div style="position:fixed;bottom:0;left:0;right:0;z-index:40;padding:4px 4px 6px 4px;background:rgba(47,29,78,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--card-border)">';
+    html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);width:100%;gap:2px">';
+    navItems.forEach(function(n){
+      var active = state.page === n.id ? 'color:#FBBF24;background:rgba(245,158,11,0.22)' : '';
+      html += '<div data-nav="'+n.id+'" class="nav-item" style="'+active+'">'+icon(n.icon,'',18)+'<span>'+n.label+'</span></div>';
+    });
+    html += '</div></div>';
+
+    html += '<footer style="padding:16px 12px 20px;max-width:1200px;margin:0 auto"><div style="font-size:10px;color:#B89CD8;text-align:center;line-height:1.5;border-top:1px solid rgba(253,224,71,0.2);padding-top:12px" class="text-wrap">Конкурсный прототип «Цифровой деканат будущего». Не является официальным сервисом вуза. Все данные вымышленные.<br/>© 2026 Академия Алфея · Панель преподавателя</div></footer>';
+
+    html += '</div>';
+    root.innerHTML = html;
+
+    document.querySelectorAll('[data-nav]').forEach(function(el){
+      el.addEventListener('click', function(){
+        state.page = el.getAttribute('data-nav');
+        render();
+      });
+    });
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', doLogout);
+
+    renderStaffPageContent();
+  }
+
+  function renderPageContent() {
+    var container = document.getElementById('pageContent');
+    if (!container) return;
+    switch(state.page) {
+      case 'profile': renderProfile(container); break;
+      case 'schedule': renderSchedule(container); break;
+      case 'grades': renderGrades(container); break;
+      case 'apps': renderApps(container); break;
+      case 'notifs': renderNotifs(container); break;
+      case 'campus': renderCampus(container); break;
+    }
+  }
+
+  function renderStaffPageContent() {
+    var container = document.getElementById('pageContent');
+    if (!container) return;
+    switch(state.page) {
+      case 'staff-profile': renderStaffProfile(container); break;
+      case 'staff-schedule': renderStaffSchedule(container); break;
+      case 'staff-grades': renderStaffGrades(container); break;
+      case 'staff-announcements': renderStaffAnnouncements(container); break;
+    }
+  }
+
+  function renderProfile(container) {
+    var u = state.user;
+    var fullName = u.fullName || '';
+    var faculty = u.faculty || '';
+    var direction = u.direction || '';
+    var course = (u.course !== undefined && u.course !== null) ? u.course + ' курс' : '';
+    var group = u.group || '';
+    var email = u.email || '';
+    var phone = u.phone || '';
+    var studentId = u.studentId || '';
+    
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:16px">';
+    html += '<div class="glass" style="padding:20px;display:flex;flex-direction:column;gap:16px"><div style="width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:30px;flex-shrink:0;background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(244,114,182,0.2));color:#F9A8D4">'+fullName.split(' ').slice(0,2).map(function(s){return s[0];}).join('')+'</div><div style="flex:1;min-width:0"><h2 style="font-size:18px;font-weight:600" class="text-wrap">'+fullName+'</h2><p style="color:#D8B4FE;margin-top:4px;font-size:13px" class="text-wrap">'+faculty+'</p><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"><span class="badge badge-accent">'+group+'</span><span class="badge badge-emerald">'+course+'</span><span class="badge badge-sky text-wrap">'+direction+'</span></div></div></div>';
+    
+    html += '<div class="glass" style="padding:18px"><h3 style="font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px">'+icon('id','accent-text')+' Информация о студенте</h3>';
+    html += '<div style="display:grid;grid-template-columns:1fr;gap:10px">';
+    html += '<div style="padding:11px;background:rgba(236,72,153,0.08);border-radius:10px;border:1px solid rgba(236,72,153,0.18)"><div style="font-size:11px;color:#D8B4FE;margin-bottom:3px">ФИО</div><div style="font-size:13px;font-weight:500" class="text-wrap">'+fullName+'</div></div>';
+    html += '<div style="padding:11px;background:rgba(236,72,153,0.08);border-radius:10px;border:1px solid rgba(236,72,153,0.18)"><div style="font-size:11px;color:#D8B4FE;margin-bottom:3px">Факультет</div><div style="font-size:13px;font-weight:500" class="text-wrap">'+faculty+'</div></div>';
+    html += '<div style="padding:11px;background:rgba(236,72,153,0.08);border-radius:10px;border:1px solid rgba(236,72,153,0.18)"><div style="font-size:11px;color:#D8B4FE;margin-bottom:3px">Направление</div><div style="font-size:13px;font-weight:500" class="text-wrap">'+direction+'</div></div>';
+    html += '<div style="padding:11px;background:rgba(236,72,153,0.08);border-radius:10px;border:1px solid rgba(236,72,153,0.18)"><div style="font-size:11px;color:#D8B4FE;margin-bottom:3px">Курс</div><div style="font-size:13px;font-weight:500">'+course+'</div></div>';
+    html += '<div style="padding:11px;background:rgba(236,72,153,0.08);border-radius:10px;border:1px solid rgba(236,72,153,0.18)"><div style="font-size:11px;color:#D8B4FE;margin-bottom:3px">Группа</div><div style="font-size:13px;font-weight:500">'+group+'</div></div>';
+    html += '</div></div>';
+    
+    html += '<div style="display:grid;grid-template-columns:1fr;gap:10px">';
+    html += infoCard('mail', 'Корпоративная почта', email);
+    html += infoCard('phone', 'Телефон', phone);
+    html += infoCard('id', 'Студенческий билет', studentId);
+    html += '</div>';
+    
+    html += '<div class="glass" style="padding:18px"><h3 style="font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px">'+icon('shield','emerald-text')+' Безопасность</h3><div style="font-size:13px;color:#F3E8FF"><div style="display:flex;align-items:center;gap:8px"><span class="dot-pulse"></span> Сессия активна, JWT подписан HMAC-SHA256</div><div style="color:#D8B4FE;font-size:11px;margin-top:6px">Пароль хранится только в виде SHA-256 хеша. Все API-запросы проверяют владельца данных (изоляция по sub).</div></div></div>';
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function infoCard(iconName, title, value) {
+    return '<div class="glass" style="padding:14px;display:flex;align-items:start;gap:10px"><div style="width:38px;height:38px;border-radius:10px;background:rgba(236,72,153,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#F472B6">'+icon(iconName)+'</div><div style="min-width:0;flex:1"><div style="font-size:11px;color:#D8B4FE">'+title+'</div><div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="text-wrap">'+value+'</div></div></div>';
+  }
+
+  async function loadSchedule() {
+    state.scheduleLoading = true;
+    renderPageContent();
+    var r = await apiGetSchedule(state.token);
+    if (r.ok) state.scheduleData = r.data;
+    state.scheduleLoading = false;
+    renderPageContent();
+  }
+
+  function renderSchedule(container) {
+    if (state.scheduleLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    var today = new Date();
+    var dayIdx = (today.getDay()+6)%7 + 1;
+    var dayNames = ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
+    var monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay()+6)%7));
+    var weekDates = [];
+    for (var i = 0; i < 6; i++) { var d = new Date(monday); d.setDate(monday.getDate()+i); weekDates.push(d); }
+
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:14px">';
+    html += '<div class="glass" style="padding:6px;display:flex;gap:6px"><button id="modeToday" style="flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;'+(state.scheduleMode==='today'?'background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#FFFFFF':'color:#D8B4FE;background:transparent')+'">Сегодня</button><button id="modeWeek" style="flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;'+(state.scheduleMode==='week'?'background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#FFFFFF':'color:#D8B4FE;background:transparent')+'">Неделя</button></div>';
+
+    if (state.scheduleMode === 'today') {
+      var todayLessons = state.scheduleData.regular.filter(function(l){ return l.day === dayIdx; }).sort(function(a,b){ return a.start.localeCompare(b.start); });
+      html += '<div style="display:flex;align-items:center;justify-content:space-between"><h3 style="font-weight:600;font-size:15px" class="text-wrap">'+dayNames[dayIdx-1]+', '+today.toLocaleDateString('ru',{day:'numeric',month:'long'})+'</h3><span style="font-size:11px;color:#D8B4FE">'+todayLessons.length+' пар</span></div>';
+      if (todayLessons.length === 0) {
+        html += '<div class="glass" style="padding:28px;text-align:center"><div style="font-weight:500">Сегодня выходной</div><div style="font-size:13px;color:#D8B4FE;margin-top:4px">Наслаждайся свободным днём ✨</div></div>';
+      } else {
+        todayLessons.forEach(function(l){ html += renderLessonCard(l, today, getOverride(today, l.day, l.start)); });
+      }
+    } else {
+      weekDates.forEach(function(date, i){
+        var dayNum = i+1;
+        var lessons = state.scheduleData.regular.filter(function(l){ return l.day === dayNum; }).sort(function(a,b){ return a.start.localeCompare(b.start); });
+        var isToday = date.toDateString() === today.toDateString();
+        html += '<div><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;color:'+(isToday?'#F472B6':'#F3E8FF')+'"><div style="font-size:13px;font-weight:600">'+dayNames[i]+'</div><div style="font-size:11px;color:#B89CD8">'+date.toLocaleDateString('ru',{day:'numeric',month:'short'})+'</div>'+(isToday?'<span class="badge badge-accent">Сегодня</span>':'')+'</div>';
+        if (lessons.length === 0) html += '<div style="font-size:11px;color:#B89CD8;padding-left:6px">Нет пар</div>';
+        else { html += '<div style="display:flex;flex-direction:column;gap:8px">'; lessons.forEach(function(l){ html += renderLessonCard(l, date, getOverride(date, l.day, l.start)); }); html += '</div>'; }
+        html += '</div>';
+      });
+    }
+    html += '</div>';
+    container.innerHTML = html;
+
+    document.getElementById('modeToday').addEventListener('click', function(){ state.scheduleMode = 'today'; renderPageContent(); });
+    document.getElementById('modeWeek').addEventListener('click', function(){ state.scheduleMode = 'week'; renderPageContent(); });
+  }
+
+  function getOverride(date, day, start) {
+    if (!state.scheduleData || !state.scheduleData.overrides) return null;
+    var iso = date.toISOString().slice(0,10);
+    return state.scheduleData.overrides.find(function(o){ return o.date === iso && o.day === day && o.start === start; });
+  }
+
+  function renderLessonCard(l, date, override) {
+    var today = new Date();
+    var dayIdx = (today.getDay()+6)%7 + 1;
+    var isNow = date.toDateString() === today.toDateString() && l.day === dayIdx;
+    var nowMin = today.getHours()*60 + today.getMinutes();
+    var sh = parseInt(l.start.split(':')[0]), sm = parseInt(l.start.split(':')[1]);
+    var eh = parseInt(l.end.split(':')[0]), em = parseInt(l.end.split(':')[1]);
+    var startMin = sh*60+sm, endMin = eh*60+em;
+    var isCurrent = isNow && nowMin >= startMin && nowMin < endMin;
+    var status = override ? override.status : null;
+    var cls = 'lesson-card glass';
+    if (status === 'cancelled') cls += ' cancelled';
+    else if (status === 'moved') cls += ' moved';
+    else if (isCurrent) cls += ' now';
+    var room = status === 'moved' ? (override.newRoom || l.room) : l.room;
+    var displayTime = status === 'moved' && override.newTime ? override.newTime : l.end;
+    
+    var html = '<div class="'+cls+'">';
+    html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">';
+    html += '<div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1">';
+    html += '<div style="text-align:center;flex-shrink:0;width:44px"><div style="font-size:11px;color:#D8B4FE">'+l.start+'</div><div style="font-size:10px;color:#B89CD8">'+displayTime+'</div></div>';
+    html += '<div style="min-width:0;flex:1">';
+    html += '<div style="font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" class="text-wrap">'+l.subject+'</div>';
+    html += '<div style="font-size:11px;color:#D8B4FE;margin-top:2px;display:flex;flex-wrap:wrap;gap:8px">';
+    html += '<span style="display:inline-flex;align-items:center;gap:3px">'+icon('pin','',9)+' '+room+'</span>';
+    html += '<span style="display:inline-flex;align-items:center;gap:3px">'+icon('user','',9)+' '+l.teacher+'</span>';
+    html += '</div>';
+    
+    if (status === 'moved' && override) {
+      html += '<div style="margin-top:6px;padding:6px 8px;background:rgba(56,189,248,0.10);border-radius:8px;border:1px solid rgba(56,189,248,0.3)">';
+      html += '<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px"><span class="moved-badge">ПЕРЕНЕСЕНО</span></div>';
+      html += '<div style="font-size:11px">';
+      if (override.oldRoom) {
+        html += '<span class="moved-old">ауд. '+override.oldRoom+'</span>';
+        html += '<span class="moved-arrow">→</span>';
+      }
+      html += '<span class="moved-new">ауд. '+room+'</span>';
+      if (override.newTime) {
+        html += '<span class="moved-arrow">·</span>';
+        html += '<span class="moved-new">'+override.newTime+'</span>';
+      }
+      html += '</div>';
+      if (override.note) html += '<div class="moved-note">💡 '+override.note+'</div>';
+      html += '</div>';
+    }
+    
+    html += '</div></div>';
+    html += '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">';
+    html += '<span class="badge badge-gray">'+l.type+'</span>';
+    if (status === 'cancelled') html += '<span class="badge badge-red">Отменено</span>';
+    if (isCurrent && !status) html += '<span class="badge badge-accent"><span class="dot-pulse" style="width:5px;height:5px"></span> Сейчас</span>';
+    html += '</div></div>';
+    html += '</div>';
+    return html;
+  }
+
+  async function loadGrades() {
+    state.gradesLoading = true;
+    renderPageContent();
+    var r = await apiGetGrades(state.token);
+    if (r.ok) state.grades = r.data;
+    state.gradesLoading = false;
+    renderPageContent();
+  }
+
+  function renderGrades(container) {
+    if (state.gradesLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    var avg = state.grades.reduce(function(s,g){ return s+g.points; },0) / state.grades.length;
+    var allowed = avg >= 60;
+    var sessionDates = state.grades.slice().sort(function(a,b){
+      var da=a.deadline.split('.').map(Number); var db=b.deadline.split('.').map(Number);
+      return new Date(da[2],da[1]-1,da[0]) - new Date(db[2],db[1]-1,db[0]);
+    });
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:16px">';
+    html += '<div style="display:grid;grid-template-columns:1fr;gap:12px">';
+    html += '<div class="glass" style="padding:16px"><div style="font-size:11px;color:#D8B4FE">Средний балл</div><div style="font-size:26px;font-weight:700;color:var(--gold);margin-top:3px">'+avg.toFixed(1)+'</div><div style="font-size:11px;color:#B89CD8;margin-top:3px">из 100</div></div>';
+    html += '<div class="glass" style="padding:16px"><div style="font-size:11px;color:#D8B4FE">Предметов</div><div style="font-size:26px;font-weight:700;margin-top:3px">'+state.grades.length+'</div></div>';
+    html += '<div class="glass" style="padding:16px"><div style="font-size:11px;color:#D8B4FE">Статус</div><div style="font-size:16px;font-weight:700;margin-top:3px;color:'+(allowed?'var(--emerald)':'#f87171')+'">'+(allowed?'Допущен ✓':'Не допущен')+'</div></div>';
+    html += '</div>';
+    html += '<div class="glass" style="padding:18px"><h3 style="font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px">'+icon('chart','gold-text')+' Баллы БРС</h3><div style="display:flex;flex-direction:column;gap:14px">';
+    state.grades.forEach(function(g){
+      var color = g.points>=85?'var(--emerald)':g.points>=70?'var(--gold)':g.points>=60?'#F3E8FF':'#f87171';
+      html += '<div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px"><div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px" class="text-wrap">'+g.subject+'</div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0"><span style="font-size:11px;color:#D8B4FE">'+g.control+'</span><span style="font-size:13px;font-weight:700;color:'+color+'">'+g.points+'</span></div></div><div class="progress-track"><div class="progress-fill" style="width:'+g.points+'%"></div></div><div style="font-size:10px;color:#B89CD8;margin-top:3px">Контроль: '+g.deadline+'</div></div>';
+    });
+    html += '</div></div>';
+    html += '<div class="glass" style="padding:18px"><h3 style="font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px">'+icon('calendar','sky-text')+' Сессия</h3><div style="display:flex;flex-direction:column;gap:6px">';
+    sessionDates.forEach(function(s){
+      var d = s.deadline.split('.').map(Number);
+      html += '<div style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px"><div style="width:50px;text-align:center;flex-shrink:0"><div style="font-size:10px;color:#D8B4FE">дек</div><div style="font-size:16px;font-weight:700;color:var(--gold)">'+String(d[0]).padStart(2,'0')+'</div></div><div style="font-size:13px;flex:1" class="text-wrap">'+s.control+': '+s.subject+' <span style="color:#D8B4FE;font-size:11px">· '+s.points+' б.</span></div></div>';
+    });
+    html += '</div></div></div>';
+    container.innerHTML = html;
+  }
+
+  async function loadApps() {
+    state.appsLoading = true;
+    renderPageContent();
+    var r = await apiGetApplications(state.token);
+    if (r.ok) state.apps = r.data;
+    state.appsLoading = false;
+    renderPageContent();
+  }
+
+  async function loadAppeals() {
+    state.appealsLoading = true;
+    renderPageContent();
+    var r = await apiGetAppeals(state.token);
+    if (r.ok) state.appeals = r.data;
+    state.appealsLoading = false;
+    renderPageContent();
+  }
+
+  async function loadAppointments() {
+    state.appointmentsLoading = true;
+    renderPageContent();
+    var r = await apiGetAppointments(state.token);
+    if (r.ok) state.appointments = r.data;
+    state.appointmentsLoading = false;
+    renderPageContent();
+  }
+
+  function renderApps(container) {
+    if (state.appsLoading || state.appealsLoading || state.appointmentsLoading) {
+      container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>';
+      return;
+    }
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:14px">';
+    // Переключатель вкладок
+    html += '<div class="tab-switcher">';
+    html += '<button class="'+(state.appsTab==='certificates'?'active':'')+'" id="tabCertificates">'+icon('file','',14)+' Справки</button>';
+    html += '<button class="'+(state.appsTab==='contact'?'active':'')+'" id="tabContact">'+icon('chat','',14)+' Связь с деканатом</button>';
+    html += '</div>';
+    
+    if (state.appsTab === 'certificates') {
+      html += renderCertificatesTab();
+    } else {
+      html += renderContactDeanTab();
+    }
+    html += '</div>';
+    container.innerHTML = html;
+
+    document.getElementById('tabCertificates').addEventListener('click', function(){ state.appsTab = 'certificates'; renderPageContent(); });
+    document.getElementById('tabContact').addEventListener('click', function(){ state.appsTab = 'contact'; renderPageContent(); });
+
+    // Биндим события в зависимости от вкладки
+    if (state.appsTab === 'certificates') bindCertificatesEvents();
+    else bindContactDeanEvents();
+  }
+
+  function renderCertificatesTab() {
+    var html = '';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3 style="font-weight:600">Мои справки</h3><button class="btn-accent" id="toggleAppForm" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;font-size:13px;width:auto">'+icon(state.showAppForm?'x':'plus', '', 12)+' '+(state.showAppForm?'Отмена':'Заказать')+'</button></div>';
+    if (state.showAppForm) {
+      html += '<form id="appForm" class="glass fade-in" style="padding:18px;display:flex;flex-direction:column;gap:14px"><div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Тип справки</label><select class="input" id="appTypeSelect"><option'+(state.appType==='Справка об обучении'?' selected':'')+'>Справка об обучении</option><option'+(state.appType==='Справка в военкомат'?' selected':'')+'>Справка в военкомат</option><option'+(state.appType==='Копия зачётки'?' selected':'')+'>Копия зачётки</option></select></div><div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Комментарий (необязательно)</label><textarea class="input" id="appNoteInput" rows="3" placeholder="Для какой организации...">'+state.appNote+'</textarea></div><button type="submit" class="btn-accent" style="align-self:flex-start">'+(state.appSubmitting?'Отправляем...':'Отправить заявку')+'</button></form>';
+    }
+    if (state.apps.length === 0) {
+      html += '<div class="glass" style="padding:28px;text-align:center"><div style="font-weight:500">Заявок пока нет</div><div style="font-size:13px;color:#D8B4FE;margin-top:4px">Нажми «Заказать», чтобы оформить справку</div></div>';
+    } else {
+      html += '<div style="display:flex;flex-direction:column;gap:10px">';
+      state.apps.forEach(function(a){
+        var statusColor = a.status==='Готова к выдаче'?'badge-emerald':a.status==='В работе'?'badge-accent':'badge-sky';
+        html += '<div class="glass" style="padding:14px"><div style="display:flex;align-items:start;justify-content:space-between;gap:10px"><div style="min-width:0;flex:1"><div style="font-weight:500;display:flex;align-items:center;gap:6px;font-size:14px" class="text-wrap">'+icon('file','accent-text',14)+' '+a.type+'</div><div style="font-size:11px;color:#D8B4FE;margin-top:3px">от '+a.createdAt+'</div>'+(a.note?'<div style="font-size:12px;color:#F3E8FF;margin-top:5px" class="text-wrap">'+a.note+'</div>':'')+'</div><span class="badge '+statusColor+'" style="flex-shrink:0">'+a.status+'</span></div></div>';
+      });
+      html += '</div>';
+    }
+    return html;
+  }
+
+  function bindCertificatesEvents() {
+    var toggleBtn = document.getElementById('toggleAppForm');
+    if (toggleBtn) toggleBtn.addEventListener('click', function(){ state.showAppForm = !state.showAppForm; renderPageContent(); });
+    var form = document.getElementById('appForm');
+    if (form) {
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        state.appType = document.getElementById('appTypeSelect').value;
+        state.appNote = document.getElementById('appNoteInput').value;
+        state.appSubmitting = true;
+        renderPageContent();
+        try {
+          var r = await apiCreateApplication(state.token, state.appType, state.appNote);
+          if (r.ok) {
+            showToast('Заявка «'+state.appType+'» отправлена', 'success');
+            state.showAppForm = false;
+            state.appNote = '';
+            await loadApps();
+          } else {
+            showToast('Ошибка: ' + (r.error || 'неизвестно'), 'error');
+            console.error('[API] Ошибка создания заявки:', r);
+          }
+        } catch(err) {
+          showToast('Ошибка сети: ' + err.message, 'error');
+          console.error('[API] Исключение при создании заявки:', err);
+        }
+        state.appSubmitting = false;
+        renderPageContent();
+      });
+    }
+  }
+
+  function renderContactDeanTab() {
+    var html = '';
+    
+    // ===== БЛОК 1: ОБРАЩЕНИЯ =====
+    html += '<div class="glass" style="padding:16px">';
+    html += '<h3 style="font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-size:15px">'+icon('chat','accent-text')+' Обращения в деканат</h3>';
+    html += '<p style="font-size:12px;color:#D8B4FE;margin-bottom:12px">Напишите вопрос — дежурный специалист ответит в течение рабочего дня.</p>';
+    
+    if (!state.showAppealForm) {
+      html += '<button class="btn-accent" id="showAppealFormBtn" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;font-size:13px">'+icon('plus','',14)+' Написать в деканат</button>';
+    } else {
+      html += '<form id="appealForm" class="fade-in" style="display:flex;flex-direction:column;gap:10px;padding:12px;background:rgba(236,72,153,0.06);border-radius:12px;border:1px solid var(--card-border)">';
+      html += '<div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Тема обращения</label>';
+      html += '<select class="input" id="appealTopicSelect">';
+      ['Стипендия','Учебный процесс','Общежитие','Другой вопрос'].forEach(function(t){
+        html += '<option'+(state.appealTopic===t?' selected':'')+'>'+t+'</option>';
+      });
+      html += '</select></div>';
+      html += '<div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Сообщение</label>';
+      html += '<textarea class="input" id="appealMessageInput" rows="3" placeholder="Опишите ваш вопрос..." required>'+state.appealMessage+'</textarea></div>';
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+      html += '<button type="button" class="btn-ghost" id="cancelAppealBtn">Отмена</button>';
+      html += '<button type="submit" class="btn-accent" style="padding:9px;font-size:13px">'+(state.appealSubmitting?'Отправка...':'Отправить')+'</button>';
+      html += '</div></form>';
+    }
+    
+    if (state.appeals.length === 0) {
+      html += '<div style="padding:20px;text-align:center;color:#D8B4FE;font-size:13px">У вас пока нет обращений</div>';
+    } else {
+      html += '<div style="margin-top:12px">';
+      state.appeals.forEach(function(ap){
+        html += '<div class="appeal-card">';
+        html += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap">';
+        html += '<div style="display:flex;align-items:center;gap:6px;min-width:0;flex:1">';
+        html += '<span class="badge badge-accent" style="flex-shrink:0">'+ap.topic+'</span>';
+        html += '<span style="font-size:10px;color:#B89CD8">'+ap.createdAt+'</span>';
+        html += '</div>';
+        var statusColor = ap.status==='Решено'?'badge-emerald':ap.status==='В работе'?'badge-gold':'badge-sky';
+        html += '<span class="badge '+statusColor+'" style="flex-shrink:0">'+ap.status+'</span>';
+        html += '</div>';
+        html += '<div style="display:flex;flex-direction:column;gap:8px">';
+        (ap.replies||[]).forEach(function(r){
+          if (r.from === 'user') {
+            html += '<div class="msg-bubble user"><div style="font-size:10px;color:#F472B6;margin-bottom:3px;font-weight:600">'+r.author+'</div><div class="text-wrap">'+r.text+'</div></div>';
+          } else {
+            html += '<div class="msg-bubble staff"><div style="font-size:10px;color:#FBBF24;margin-bottom:3px;font-weight:600">'+icon('shield','',10)+' '+r.author+'</div><div class="text-wrap">'+r.text+'</div></div>';
+          }
+        });
+        html += '</div>';
+        if (ap.status !== 'Решено') {
+          if (state.appealReplyId === ap.id) {
+            html += '<div style="margin-top:8px;display:flex;gap:6px">';
+            html += '<input class="input" id="appealReplyInput" placeholder="Ваш ответ..." style="font-size:12px;padding:8px 10px" value="'+state.appealReplyText+'"/>';
+            html += '<button class="btn-accent" id="sendReplyBtn" style="width:auto;padding:8px 10px;font-size:12px">'+icon('send','',12)+'</button>';
+            html += '<button class="btn-ghost" id="cancelReplyBtn" style="padding:8px 10px;font-size:12px">'+icon('x','',12)+'</button>';
+            html += '</div>';
+          } else {
+            html += '<button data-reply-appeal="'+ap.id+'" style="margin-top:8px;font-size:11px;color:#D8B4FE;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid var(--card-border)">'+icon('msg','',11)+' Ответить</button>';
+          }
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    
+    // ===== БЛОК 2: ЗАПИСЬ НА ПРИЁМ =====
+    html += '<div class="glass" style="padding:16px">';
+    html += '<h3 style="font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-size:15px">'+icon('ticket','gold-text')+' Запись на очный приём</h3>';
+    html += '<p style="font-size:12px;color:#D8B4FE;margin-bottom:12px">Без очереди. Корпус A, каб. 101.</p>';
+    
+    // Активные талоны
+    var activeApts = state.appointments.filter(function(a){ return a.status === 'active'; });
+    if (activeApts.length > 0) {
+      html += '<div style="margin-bottom:12px">';
+      activeApts.forEach(function(apt){
+        html += '<div class="ticket-card fade-in">';
+        html += '<div class="ticket-cut"></div><div class="ticket-cut right"></div>';
+        html += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">';
+        html += '<div style="font-size:10px;color:#D8B4FE;font-weight:600;letter-spacing:1px">ЭЛЕКТРОННЫЙ ТАЛОН</div>';
+        html += '<span class="badge badge-emerald">Активен</span>';
+        html += '</div>';
+        html += '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap">';
+        html += '<div class="ticket-number">'+apt.ticketNumber+'</div>';
+        html += '<div style="font-size:11px;color:#D8B4FE">№ талона</div>';
+        html += '</div>';
+        html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">';
+        html += '<div style="padding:8px;background:rgba(255,255,255,0.06);border-radius:8px"><div style="font-size:10px;color:#D8B4FE">Дата</div><div style="font-size:13px;font-weight:600">'+apt.date+'</div></div>';
+        html += '<div style="padding:8px;background:rgba(255,255,255,0.06);border-radius:8px"><div style="font-size:10px;color:#D8B4FE">Время</div><div style="font-size:13px;font-weight:600">'+apt.time+'</div></div>';
+        html += '</div>';
+        html += '<div style="padding:8px;background:rgba(255,255,255,0.06);border-radius:8px;margin-bottom:10px"><div style="font-size:10px;color:#D8B896">Место</div><div style="font-size:13px;font-weight:500" class="text-wrap">'+apt.room+'</div></div>';
+        html += '<div style="padding:8px;background:rgba(255,255,255,0.06);border-radius:8px;margin-bottom:12px"><div style="font-size:10px;color:#D8B4FE">Причина</div><div style="font-size:13px;font-weight:500" class="text-wrap">'+apt.reason+'</div></div>';
+        html += '<button data-cancel-apt="'+apt.id+'" class="btn-ghost" style="width:100%;padding:9px;font-size:12px;color:#f87171;display:flex;align-items:center;justify-content:center;gap:6px">'+icon('x','',12)+' Отменить запись</button>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+    
+    if (!state.showAppointmentForm) {
+      html += '<button class="btn-accent" id="showAptFormBtn" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;font-size:13px">'+icon('plus','',14)+' Записаться на приём</button>';
+    } else {
+      html += '<form id="aptForm" class="fade-in" style="display:flex;flex-direction:column;gap:10px;padding:12px;background:rgba(245,158,11,0.06);border-radius:12px;border:1px solid var(--card-border)">';
+      html += '<div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Причина визита</label>';
+      html += '<select class="input" id="aptReasonSelect">';
+      ['Учебный процесс','Стипендия','Общежитие','Перевод/отчисление','Другой вопрос'].forEach(function(t){
+        html += '<option'+(state.aptReason===t?' selected':'')+'>'+t+'</option>';
+      });
+      html += '</select></div>';
+      html += '<div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Дата</label>';
+      html += '<input class="input" id="aptDateInput" type="date" value="'+state.aptDate+'" required/></div>';
+      html += '<div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:6px">Свободное время</label>';
+      html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">';
+      ['10:00','11:30','14:00','15:30'].forEach(function(t){
+        html += '<button type="button" class="time-slot'+(state.aptTime===t?' active':'')+'" data-time="'+t+'">'+t+'</button>';
+      });
+      html += '</div></div>';
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+      html += '<button type="button" class="btn-ghost" id="cancelAptBtn">Отмена</button>';
+      html += '<button type="submit" class="btn-accent" style="padding:9px;font-size:13px">'+(state.aptSubmitting?'Запись...':'Записаться')+'</button>';
+      html += '</div></form>';
+    }
+    html += '</div>';
+    
+    // ===== БЛОК 3: КОНТАКТЫ =====
+    html += '<div class="glass" style="padding:16px">';
+    html += '<h3 style="font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-size:15px">'+icon('building','sky-text')+' Контакты деканата</h3>';
+    html += '<div style="display:flex;flex-direction:column;gap:8px">';
+    html += '<div class="contact-row"><div class="contact-icon">'+icon('clock')+'</div><div style="min-width:0;flex:1"><div style="font-size:11px;color:#D8B4FE">График работы</div><div style="font-size:13px;font-weight:500">Пн–Пт, 09:00–17:00</div></div></div>';
+    html += '<div class="contact-row"><div class="contact-icon">'+icon('pin')+'</div><div style="min-width:0;flex:1"><div style="font-size:11px;color:#D8B4FE">Адрес</div><div style="font-size:13px;font-weight:500">Корпус A, каб. 101</div></div></div>';
+    html += '<div class="contact-row"><div class="contact-icon">'+icon('mail')+'</div><div style="min-width:0;flex:1"><div style="font-size:11px;color:#D8B4FE">Почта</div><div style="font-size:13px;font-weight:500;word-break:break-all">decanat@edu.alfea.magic</div></div></div>';
+    html += '<div class="contact-row"><div class="contact-icon">'+icon('phone')+'</div><div style="min-width:0;flex:1"><div style="font-size:11px;color:#D8B4FE">Телефон</div><div style="font-size:13px;font-weight:500">+7 (900) 555-00-00</div></div></div>';
+    html += '</div></div>';
+    
+    return html;
+  }
+
+  function bindContactDeanEvents() {
+    // Обращения
+    var showAppealBtn = document.getElementById('showAppealFormBtn');
+    if (showAppealBtn) showAppealBtn.addEventListener('click', function(){ state.showAppealForm = true; renderPageContent(); });
+    var cancelAppealBtn = document.getElementById('cancelAppealBtn');
+    if (cancelAppealBtn) cancelAppealBtn.addEventListener('click', function(){ state.showAppealForm = false; state.appealMessage = ''; renderPageContent(); });
+    var appealForm = document.getElementById('appealForm');
+    if (appealForm) {
+      appealForm.addEventListener('submit', async function(e){
+        e.preventDefault();
+        state.appealTopic = document.getElementById('appealTopicSelect').value;
+        state.appealMessage = document.getElementById('appealMessageInput').value.trim();
+        if (!state.appealMessage) { showToast('Напишите сообщение', 'error'); return; }
+        state.appealSubmitting = true;
+        renderPageContent();
+        try {
+          var r = await apiCreateAppeal(state.token, state.appealTopic, state.appealMessage);
+          if (r.ok) {
+            showToast('Обращение #'+r.appealNumber+' отправлено', 'success');
+            state.showAppealForm = false;
+            state.appealMessage = '';
+            state.appealSubmitting = false;
+            await loadAppeals();
+          } else {
+            showToast('Ошибка: ' + (r.error||''), 'error');
+            console.error('[API] Ошибка создания обращения:', r);
+          }
+        } catch(err) {
+          showToast('Ошибка сети: ' + err.message, 'error');
+          console.error('[API] Исключение:', err);
+        }
+        state.appealSubmitting = false;
+        renderPageContent();
+      });
+    }
+    document.querySelectorAll('[data-reply-appeal]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        state.appealReplyId = btn.getAttribute('data-reply-appeal');
+        state.appealReplyText = '';
+        renderPageContent();
+      });
+    });
+    var sendReplyBtn = document.getElementById('sendReplyBtn');
+    if (sendReplyBtn) sendReplyBtn.addEventListener('click', async function(){
+      var text = document.getElementById('appealReplyInput').value.trim();
+      if (!text) return;
+      try {
+        var r = await apiReplyAppeal(state.token, state.appealReplyId, text);
+        if (r.ok) {
+          showToast('Ответ отправлен', 'success');
+          state.appealReplyId = null;
+          state.appealReplyText = '';
+          loadAppeals();
+        } else {
+          showToast('Ошибка: ' + (r.error||''), 'error');
+        }
+      } catch(err) { showToast('Ошибка сети: ' + err.message, 'error'); }
+    });
+    var cancelReplyBtn = document.getElementById('cancelReplyBtn');
+    if (cancelReplyBtn) cancelReplyBtn.addEventListener('click', function(){ state.appealReplyId = null; state.appealReplyText = ''; renderPageContent(); });
+    
+    // Запись на приём
+    var showAptBtn = document.getElementById('showAptFormBtn');
+    if (showAptBtn) showAptBtn.addEventListener('click', function(){ state.showAppointmentForm = true; renderPageContent(); });
+    var cancelAptBtn = document.getElementById('cancelAptBtn');
+    if (cancelAptBtn) cancelAptBtn.addEventListener('click', function(){ state.showAppointmentForm = false; state.aptTime = ''; renderPageContent(); });
+    document.querySelectorAll('.time-slot').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        state.aptTime = btn.getAttribute('data-time');
+        renderPageContent();
+      });
+    });
+    var aptForm = document.getElementById('aptForm');
+    if (aptForm) {
+      aptForm.addEventListener('submit', async function(e){
+        e.preventDefault();
+        state.aptReason = document.getElementById('aptReasonSelect').value;
+        state.aptDate = document.getElementById('aptDateInput').value;
+        if (!state.aptDate) { showToast('Выберите дату', 'error'); return; }
+        if (!state.aptTime) { showToast('Выберите время', 'error'); return; }
+        state.aptSubmitting = true;
+        renderPageContent();
+        try {
+          var r = await apiCreateAppointment(state.token, state.aptReason, state.aptDate, state.aptTime);
+          if (r.ok) {
+            state.lastCreatedTicket = r.data;
+            showToast('Запись создана! Талон: '+r.data.ticketNumber, 'success');
+            state.showAppointmentForm = false;
+            state.aptTime = '';
+            state.aptDate = '';
+            state.aptSubmitting = false;
+            await loadAppointments();
+          } else {
+            showToast('Ошибка: ' + (r.error||''), 'error');
+            console.error('[API] Ошибка записи:', r);
+          }
+        } catch(err) {
+          showToast('Ошибка сети: ' + err.message, 'error');
+          console.error('[API] Исключение:', err);
+        }
+        state.aptSubmitting = false;
+        renderPageContent();
+      });
+    }
+    document.querySelectorAll('[data-cancel-apt]').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        var aptId = btn.getAttribute('data-cancel-apt');
+        if (!confirm('Отменить запись?')) return;
+        try {
+          var r = await apiCancelAppointment(state.token, aptId);
+          if (r.ok) {
+            showToast('Запись отменена', 'info');
+            loadAppointments();
+          } else {
+            showToast('Ошибка: ' + (r.error||''), 'error');
+          }
+        } catch(err) { showToast('Ошибка сети: ' + err.message, 'error'); }
+      });
+    });
+  }
+
+  async function loadNotifs() {
+    state.notifsLoading = true;
+    renderPageContent();
+    var r = await apiGetNotifications(state.token);
+    if (r.ok) state.notifs = r.data;
+    state.notifsLoading = false;
+    renderPageContent();
+  }
+
+  function renderNotifs(container) {
+    if (state.notifsLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    var unread = state.notifs.filter(function(n){ return !n.read; }).length;
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:14px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><h3 style="font-weight:600;display:flex;align-items:center;gap:6px">'+icon('bell','accent-text')+' Уведомления'+(unread>0?' <span class="badge badge-accent">'+unread+'</span>':'')+'</h3>'+(unread>0?'<button id="markAllBtn" style="font-size:11px;color:#D8B4FE;background:none;border:none;cursor:pointer">Прочитать все</button>':'')+'</div>';
+    if (state.notifs.length === 0) {
+      html += '<div class="glass" style="padding:28px;text-align:center"><div style="font-weight:500">Уведомлений нет</div></div>';
+    } else {
+      html += '<div style="display:flex;flex-direction:column;gap:8px">';
+      state.notifs.forEach(function(n){
+        var ic = n.type==='deadline'?{name:'alarm',color:'text-red-400'}:n.type==='application'?{name:'check',color:'emerald-text'}:n.type==='schedule'?{name:'calendar',color:'sky-text'}:{name:'megaphone',color:'accent-text'};
+        html += '<div data-notif="'+n.id+'" class="glass" style="padding:14px;cursor:pointer;'+(n.read?'':'border-left:2px solid var(--accent);opacity:1')+(n.read?';opacity:0.75':'')+'"><div style="display:flex;align-items:start;gap:10px"><div style="width:34px;height:34px;border-radius:8px;background:rgba(236,72,153,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">'+icon(ic.name, ic.color)+'</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;justify-content:space-between;gap:6px"><div style="font-weight:500;font-size:13px" class="text-wrap">'+n.title+'</div>'+(n.read?'':'<span style="width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>')+'</div><div style="font-size:13px;color:#F3E8FF;margin-top:3px" class="text-wrap">'+n.body+'</div><div style="font-size:10px;color:#B89CD8;margin-top:4px">'+n.date+'</div></div></div></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
+
+    var markAllBtn = document.getElementById('markAllBtn');
+    if (markAllBtn) markAllBtn.addEventListener('click', async function(){
+      for (var i = 0; i < state.notifs.length; i++) { if (!state.notifs[i].read) await apiMarkNotificationRead(state.token, state.notifs[i].id); }
+      showToast('Все уведомления прочитаны', 'success');
+      loadNotifs();
+    });
+    document.querySelectorAll('[data-notif]').forEach(function(el){
+      el.addEventListener('click', async function(){
+        var id = el.getAttribute('data-notif');
+        var n = state.notifs.find(function(x){ return x.id === id; });
+        if (n && !n.read) { await apiMarkNotificationRead(state.token, id); loadNotifs(); }
+      });
+    });
+  }
+
+  function renderCampus(container) {
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:14px">';
+    html += '<div class="glass" style="padding:6px;display:flex;gap:6px"><button id="tabRooms" style="flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" class="'+(state.campusTab==='rooms'?'btn-accent':'btn-ghost')+'">'+icon('map','',12)+' Аудитории</button><button id="tabBuddy" style="flex:1;padding:9px;border-radius:10px;font-size:13px;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" class="'+(state.campusTab==='buddy'?'btn-accent':'btn-ghost')+'">'+icon('users','',12)+' Напарник</button></div>';
+    html += '<div id="campusContent"></div></div>';
+    container.innerHTML = html;
+
+    document.getElementById('tabRooms').addEventListener('click', function(){ state.campusTab = 'rooms'; renderCampus(container); loadRooms(); });
+    document.getElementById('tabBuddy').addEventListener('click', function(){ state.campusTab = 'buddy'; renderCampus(container); loadBuddies(); });
+
+    if (state.campusTab === 'rooms') renderRoomsTab(document.getElementById('campusContent'));
+    else renderBuddyTab(document.getElementById('campusContent'));
+  }
+
+  async function loadRooms() {
+    state.roomsLoading = true;
+    var c = document.getElementById('campusContent');
+    if (c) renderRoomsTab(c);
+    var r = await apiGetRooms(state.token, state.roomBuilding);
+    if (r.ok) state.rooms = r.data;
+    state.roomsLoading = false;
+    if (c) renderRoomsTab(c);
+  }
+
+  function renderRoomsTab(container) {
+    if (!container) return;
+    if (state.roomsLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    var buildings = ['ALL','A','B','C','S'];
+    var html = '<div style="display:flex;flex-direction:column;gap:14px"><div style="display:flex;gap:6px;overflow-x:auto" class="hide-scroll">';
+    buildings.forEach(function(b){ html += '<button data-building="'+b+'" class="chip'+(state.roomBuilding===b?' active':'')+'">'+(b==='ALL'?'Все':'Корпус '+b)+'</button>'; });
+    html += '</div><div class="glass" style="padding:14px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><span class="dot-pulse"></span><span style="font-size:13px">Обновлено · '+state.rooms.length+' мест</span></div><div style="display:grid;grid-template-columns:1fr;gap:10px">';
+    state.rooms.forEach(function(r){
+      html += '<div style="padding:10px;border-radius:10px;background:rgba(236,72,153,0.06);border:1px solid rgba(236,72,153,0.15)"><div style="display:flex;align-items:center;justify-content:space-between"><div style="font-weight:500;display:flex;align-items:center;gap:6px;font-size:13px">'+icon('door','accent-text',14)+' '+r.room+'</div><span class="badge badge-emerald">свободна</span></div><div style="font-size:11px;color:#D8B4FE;margin-top:5px;display:flex;align-items:center;gap:10px"><span style="display:inline-flex;align-items:center;gap:3px">'+icon('building','',9)+' '+r.building+'</span><span style="display:inline-flex;align-items:center;gap:3px">'+icon('users','',9)+' '+r.capacity+'</span></div><div style="font-size:10px;color:#B89CD8;margin-top:3px">'+r.type+' · до '+r.freeUntil+'</div></div>';
+    });
+    html += '</div></div></div>';
+    container.innerHTML = html;
+    document.querySelectorAll('[data-building]').forEach(function(el){ el.addEventListener('click', function(){ state.roomBuilding = el.getAttribute('data-building'); loadRooms(); }); });
+  }
+
+  async function loadBuddies() {
+    state.buddiesLoading = true;
+    var c = document.getElementById('campusContent');
+    if (c) renderBuddyTab(c);
+    var r = await apiGetBuddies(state.token);
+    if (r.ok) state.buddies = r.data;
+    state.buddiesLoading = false;
+    if (c) renderBuddyTab(c);
+  }
+
+  function renderBuddyTab(container) {
+    if (!container) return;
+    if (state.buddiesLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    var html = '<div style="display:flex;flex-direction:column;gap:14px"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><p style="font-size:13px;color:#D8B4FE">Доска объявлений</p><button class="btn-accent" id="toggleBuddyForm" style="display:flex;align-items:center;gap:6px;padding:8px 12px;font-size:13px;width:auto">'+icon(state.showBuddyForm?'x':'plus','',12)+' '+(state.showBuddyForm?'Отмена':'Объявление')+'</button></div>';
+    if (state.showBuddyForm) {
+      html += '<form id="buddyForm" class="glass fade-in" style="padding:18px;display:flex;flex-direction:column;gap:10px"><input class="input" id="buddyTitleInput" placeholder="Заголовок" value="'+state.buddyTitle+'" required/><textarea class="input" id="buddyBodyInput" rows="3" placeholder="Описание..." required>'+state.buddyBody+'</textarea><input class="input" id="buddyTagsInput" placeholder="Теги через запятую" value="'+state.buddyTags+'"/><button type="submit" class="btn-accent" style="align-self:flex-start">Опубликовать</button></form>';
+    }
+    html += '<div style="display:flex;flex-direction:column;gap:10px">';
+    (state.buddies||[]).forEach(function(b){
+      var hasReplied = b.replies && b.replies.some(function(r){ return r.author === state.user.fullName.split(' ')[0]; });
+      html += '<div class="glass" style="padding:14px"><div style="font-weight:500;font-size:14px" class="text-wrap">'+b.title+'</div><div style="font-size:11px;color:#D8B4FE;margin-top:2px">'+b.authorName+' · '+b.date+'</div><div style="font-size:13px;color:#F3E8FF;margin-top:6px" class="text-wrap">'+b.body+'</div>';
+      if (b.tags && b.tags.length > 0) { html += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">'; b.tags.forEach(function(t){ html += '<span class="badge badge-gray">#'+t+'</span>'; }); html += '</div>'; }
+      if (b.replies && b.replies.length > 0) { html += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--card-border);display:flex;flex-direction:column;gap:6px">'; b.replies.forEach(function(r){ html += '<div style="font-size:11px;background:rgba(236,72,153,0.08);border-radius:8px;padding:7px"><span style="color:#F472B6;font-weight:600">'+r.author+':</span> <span style="color:#F3E8FF">'+r.text+'</span></div>'; }); html += '</div>'; }
+      html += '<div style="margin-top:10px">';
+      if (hasReplied) {
+        html += '<div style="display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;background:rgba(16,185,129,0.15);color:#6EE7B7;font-size:12px;font-weight:500">'+icon('check','',12)+' Вы откликнулись</div>';
+      } else if (state.replyTo === b.id) {
+        html += '<div style="display:flex;gap:6px"><input class="input" id="replyInput" placeholder="Напиши отклик..." style="font-size:12px;padding:8px 10px" value="'+state.replyText+'"/><button class="btn-accent" id="replySubmitBtn" style="padding:8px 10px;font-size:12px;width:auto">OK</button><button class="btn-ghost" id="replyCancelBtn" style="padding:8px 10px;font-size:12px">'+icon('x','',12)+'</button></div>';
+      } else {
+        html += '<button data-reply="'+b.id+'" style="font-size:11px;color:#D8B4FE;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;border:1px solid var(--card-border)">'+icon('msg','',11)+' Откликнуться</button>';
+      }
+      html += '</div></div>';
+    });
+    html += '</div></div>';
+    container.innerHTML = html;
+
+    var toggleBtn = document.getElementById('toggleBuddyForm');
+    if (toggleBtn) toggleBtn.addEventListener('click', function(){ state.showBuddyForm = !state.showBuddyForm; renderBuddyTab(container); });
+    var form = document.getElementById('buddyForm');
+    if (form) {
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        state.buddyTitle = document.getElementById('buddyTitleInput').value;
+        state.buddyBody = document.getElementById('buddyBodyInput').value;
+        state.buddyTags = document.getElementById('buddyTagsInput').value;
+        var tags = state.buddyTags.split(',').map(function(t){ return t.trim(); }).filter(Boolean);
+        try {
+          var r = await apiCreateBuddy(state.token, state.buddyTitle, state.buddyBody, tags);
+          if (r.ok) {
+            showToast('Объявление опубликовано', 'success');
+            state.buddyTitle = ''; state.buddyBody = ''; state.buddyTags = ''; state.showBuddyForm = false;
+            loadBuddies();
+          } else {
+            showToast('Ошибка: ' + (r.error || 'неизвестно'), 'error');
+            console.error('[API] Ошибка создания объявления:', r);
+          }
+        } catch(err) {
+          showToast('Ошибка сети: ' + err.message, 'error');
+          console.error('[API] Исключение при создании объявления:', err);
+        }
+      });
+    }
+    document.querySelectorAll('[data-reply]').forEach(function(el){ el.addEventListener('click', function(){ state.replyTo = el.getAttribute('data-reply'); state.replyText = ''; renderBuddyTab(container); }); });
+    var replySubmit = document.getElementById('replySubmitBtn');
+    if (replySubmit) replySubmit.addEventListener('click', async function(){ var text = document.getElementById('replyInput').value.trim(); if (!text) return; try { var r = await apiReplyBuddy(state.token, state.replyTo, text); if (r.ok) { showToast('Отклик отправлен', 'success'); state.replyTo = null; state.replyText = ''; loadBuddies(); } else { showToast('Ошибка: ' + (r.error||''), 'error'); } } catch(err) { showToast('Ошибка сети: ' + err.message, 'error'); } });
+    var replyCancel = document.getElementById('replyCancelBtn');
+    if (replyCancel) replyCancel.addEventListener('click', function(){ state.replyTo = null; state.replyText = ''; renderBuddyTab(container); });
+  }
+
+  function renderChat() {
+    var html = '<div style="position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end"><div class="glass-strong" style="width:100%;max-width:400px;margin:0 auto;border-radius:18px 18px 0 0;display:flex;flex-direction:column;overflow:hidden;max-height:85vh;height:100%"><div style="padding:14px;border-bottom:1px solid var(--card-border);display:flex;align-items:center;gap:10px"><div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(244,114,182,0.3));display:flex;align-items:center;justify-content:center;flex-shrink:0">'+icon('sparkles','accent-text')+'</div><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">Алфея Ассистент</div><div style="font-size:11px;color:#D8B4FE;display:flex;align-items:center;gap:5px"><span class="dot-pulse" style="width:5px;height:5px"></span> Локально</div></div><button class="btn-ghost" id="chatCloseBtn" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0">'+icon('x')+'</button></div><div id="chatMessages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px">';
+    state.chatMessages.forEach(function(m){
+      html += '<div style="display:flex;'+(m.role==='user'?'justify-content:flex-end':'justify-content:flex-start')+'"><div style="max-width:85%;padding:9px 12px;border-radius:14px;font-size:13px;white-space:pre-line;'+(m.role==='user'?'background:rgba(236,72,153,0.22);border:1px solid rgba(236,72,153,0.45);border-bottom-right-radius:4px':'background:rgba(255,255,255,0.08);border:1px solid var(--card-border);border-bottom-left-radius:4px')+'" class="text-wrap">'+m.text+'</div></div>';
+    });
+    if (state.chatLoading) {
+      html += '<div style="display:flex;justify-content:flex-start"><div style="background:rgba(255,255,255,0.08);border:1px solid var(--card-border);padding:10px 14px;border-radius:14px;border-bottom-left-radius:4px;display:flex;gap:4px"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent-light);animation:bounce 1s infinite"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--accent-light);animation:bounce 1s infinite;animation-delay:0.15s"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--accent-light);animation:bounce 1s infinite;animation-delay:0.3s"></span></div></div>';
+    }
+    html += '</div>';
+    if (state.chatMessages.length <= 1 && !state.chatLoading) {
+      html += '<div style="padding:0 14px 8px;display:flex;flex-wrap:wrap;gap:5px">';
+      ['Какая сейчас пара?','Мои баллы БРС','Ближайшие дедлайны','Как связаться с деканатом?'].forEach(function(q){ html += '<button data-quick="'+q+'" class="chip" style="font-size:11px">'+q+'</button>'; });
+      html += '</div>';
+    }
+    html += '<form id="chatForm" style="padding:10px;border-top:1px solid var(--card-border);display:flex;gap:6px"><input class="input" id="chatInput" placeholder="Спроси что-нибудь..." style="font-size:13px;padding:10px 12px" value="'+state.chatInput+'"/><button type="submit" class="btn-accent" style="padding:10px 12px;width:auto">'+icon('send','',14)+'</button></form></div></div>';
+    root.insertAdjacentHTML('beforeend', html);
+
+    document.getElementById('chatCloseBtn').addEventListener('click', function(){ state.chatOpen = false; render(); });
+    var form = document.getElementById('chatForm');
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var text = document.getElementById('chatInput').value.trim();
+      if (!text) return;
+      state.chatMessages.push({ role:'user', text: text });
+      state.chatInput = ''; state.chatLoading = true;
+      renderChat();
+      try {
+        var r = await apiAssistant(state.token, text);
+        if (r.ok) state.chatMessages.push({ role:'bot', text: r.answer });
+        else state.chatMessages.push({ role:'bot', text: 'Упс, что-то пошло не так.' });
+      } catch(err) { state.chatMessages.push({ role:'bot', text: 'Ошибка: '+err.message }); }
+      state.chatLoading = false;
+      renderChat();
+    });
+    document.querySelectorAll('[data-quick]').forEach(function(el){ el.addEventListener('click', function(){ document.getElementById('chatInput').value = el.getAttribute('data-quick'); document.getElementById('chatInput').focus(); }); });
+    var msgs = document.getElementById('chatMessages');
+    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ===== STAFF PAGES =====
+  async function loadStaffProfile() {
+    if (state.staffProfileLoading === false && state.staffProfile) return;
+    state.staffProfileLoading = true;
+    renderStaffPageContent();
+    try {
+      var r = await apiStaffProfile(state.token);
+      if (r.ok) state.staffProfile = r.data;
+      else { console.error('[API] Ошибка загрузки профиля:', r); showToast('Ошибка загрузки профиля', 'error'); }
+    } catch(err) {
+      console.error('[API] Исключение при загрузке профиля:', err);
+      showToast('Ошибка сети: ' + err.message, 'error');
+    }
+    state.staffProfileLoading = false;
+    renderStaffPageContent();
+  }
+
+  function renderStaffProfile(container) {
+    if (state.staffProfileLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    if (!state.staffProfile) { container.innerHTML = '<div class="glass" style="padding:20px">Данные не загружены</div>'; return; }
+    var p = state.staffProfile;
+    var u = p.user;
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:16px">';
+    html += '<div class="glass" style="padding:20px;display:flex;flex-direction:column;gap:14px"><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><div style="width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:28px;flex-shrink:0;background:linear-gradient(135deg,rgba(245,158,11,0.3),rgba(251,191,36,0.2));color:#FDE68A">'+u.fullName.split(' ').slice(0,2).map(function(s){return s[0];}).join('')+'</div><div style="flex:1;min-width:0"><h2 style="font-size:18px;font-weight:600;color:#FDE68A" class="text-wrap">'+u.fullName+'</h2><p style="color:#FDE68A;margin-top:3px;font-size:13px" class="text-wrap">'+(u.position||'')+'</p><p style="color:#D4B896;font-size:12px" class="text-wrap">'+(u.department||'')+'</p><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"><span class="badge badge-gold">'+icon('building','',9)+' '+(u.office||'')+'</span><span class="badge badge-purple">'+icon('clock','',9)+' '+(u.officeHours||'')+'</span></div></div></div></div>';
+    
+    html += '<div style="display:grid;grid-template-columns:1fr;gap:10px">';
+    html += '<div class="stat-card"><div style="font-size:11px;color:#D4B896">Пар сегодня</div><div style="font-size:26px;font-weight:700;color:#FBBF24;margin-top:3px">'+p.todayLessonsCount+'</div></div>';
+    html += '<div class="stat-card"><div style="font-size:11px;color:#D4B896">Новые заявки</div><div style="font-size:26px;font-weight:700;color:#FBBF24;margin-top:3px">'+p.newApplicationsCount+'</div></div>';
+    html += '<div class="stat-card"><div style="font-size:11px;color:#D4B896">Студенты &lt; 60 б.</div><div style="font-size:26px;font-weight:700;color:#f87171;margin-top:3px">'+p.lowGradeStudents.length+'</div>';
+    if (p.lowGradeStudents.length > 0) html += '<div style="font-size:10px;color:#D4B896;margin-top:4px" class="text-wrap">'+p.lowGradeStudents.join(', ')+'</div>';
+    html += '</div>';
+    html += '</div>';
+    
+    html += '<div class="glass" style="padding:18px"><h3 style="font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;color:#FDE68A">'+icon('mail','gold-text')+' Контакты</h3>';
+    html += '<div style="display:grid;grid-template-columns:1fr;gap:10px">';
+    html += '<div style="padding:10px;background:rgba(245,158,11,0.08);border-radius:10px;border:1px solid rgba(245,158,11,0.18)"><div style="font-size:10px;color:#D4B896;margin-bottom:3px">Почта</div><div style="font-size:13px;font-weight:500" class="text-wrap">'+(u.email||'')+'</div></div>';
+    html += '<div style="padding:10px;background:rgba(245,158,11,0.08);border-radius:10px;border:1px solid rgba(245,158,11,0.18)"><div style="font-size:10px;color:#D4B896;margin-bottom:3px">Телефон</div><div style="font-size:13px;font-weight:500">'+(u.phone||'')+'</div></div>';
+    html += '<div style="padding:10px;background:rgba(245,158,11,0.08);border-radius:10px;border:1px solid rgba(245,158,11,0.18)"><div style="font-size:10px;color:#D4B896;margin-bottom:3px">Кабинет</div><div style="font-size:13px;font-weight:500">'+(u.office||'')+'</div></div>';
+    html += '<div style="padding:10px;background:rgba(245,158,11,0.08);border-radius:10px;border:1px solid rgba(245,158,11,0.18)"><div style="font-size:10px;color:#D4B896;margin-bottom:3px">Часы приёма</div><div style="font-size:13px;font-weight:500">'+(u.officeHours||'')+'</div></div>';
+    html += '</div></div>';
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  async function loadStaffSchedule() {
+    state.staffScheduleLoading = true;
+    renderStaffPageContent();
+    try {
+      var r = await apiStaffSchedule(state.token);
+      if (r.ok) state.staffSchedule = r.data;
+      else { console.error('[API] Ошибка загрузки расписания:', r); showToast('Ошибка загрузки расписания', 'error'); }
+    } catch(err) {
+      console.error('[API] Исключение при загрузке расписания:', err);
+      showToast('Ошибка сети: ' + err.message, 'error');
+    }
+    state.staffScheduleLoading = false;
+    renderStaffPageContent();
+  }
+
+  function renderStaffSchedule(container) {
+    if (state.staffScheduleLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    if (!state.staffSchedule) { container.innerHTML = '<div class="glass" style="padding:20px">Данные не загружены</div>'; return; }
+    var today = new Date();
+    var dayIdx = (today.getDay()+6)%7 + 1;
+    var dayNames = ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
+    var monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay()+6)%7));
+    var weekDates = [];
+    for (var i = 0; i < 6; i++) { var d = new Date(monday); d.setDate(monday.getDate()+i); weekDates.push(d); }
+
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:14px">';
+    html += '<div class="glass" style="padding:14px;background:rgba(245,158,11,0.10);border-color:rgba(245,158,11,0.35)"><div style="font-size:12px;color:#FDE68A;font-weight:500">💡 Управление расписанием</div><div style="font-size:11px;color:#D4B896;margin-top:3px">Используйте кнопки «Перенести» и «Отменить». Изменения сразу видны студентам.</div></div>';
+
+    weekDates.forEach(function(date, i){
+      var dayNum = i+1;
+      var lessons = (state.staffSchedule.regular||[]).filter(function(l){ return l.day === dayNum; }).sort(function(a,b){ return a.start.localeCompare(b.start); });
+      var isToday = date.toDateString() === today.toDateString();
+      html += '<div><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;color:'+(isToday?'#FBBF24':'#FDE68A')+'"><div style="font-size:13px;font-weight:600">'+dayNames[i]+'</div><div style="font-size:11px;color:#D4B896">'+date.toLocaleDateString('ru',{day:'numeric',month:'short'})+'</div>'+(isToday?'<span class="badge badge-gold">Сегодня</span>':'')+'</div>';
+      if (lessons.length === 0) html += '<div style="font-size:11px;color:#D4B896;padding-left:6px">Нет пар</div>';
+      else {
+        html += '<div style="display:flex;flex-direction:column;gap:8px">';
+        lessons.forEach(function(l){
+          var override = getStaffOverride(date, l.day, l.start);
+          var status = override ? override.status : null;
+          var cls = 'lesson-card glass';
+          if (status === 'cancelled') cls += ' cancelled';
+          else if (status === 'moved') cls += ' moved';
+          var room = status === 'moved' ? (override.newRoom || l.room) : l.room;
+          html += '<div class="'+cls+'">';
+          html += '<div style="display:flex;flex-direction:column;gap:8px">';
+          html += '<div style="display:flex;align-items:center;gap:10px">';
+          html += '<div style="text-align:center;flex-shrink:0;width:44px"><div style="font-size:11px;color:#D4B896">'+l.start+'</div><div style="font-size:10px;color:#B89CD8">'+l.end+'</div></div>';
+          html += '<div style="min-width:0;flex:1"><div style="font-weight:500;font-size:14px" class="text-wrap">'+l.subject+'</div><div style="font-size:11px;color:#D4B896;margin-top:2px">'+icon('pin','',9)+' '+room+' · '+icon('users','',9)+' '+l.group+'</div></div>';
+          if (status === 'cancelled') html += '<span class="badge badge-red">Отменено</span>';
+          if (status === 'moved') html += '<span class="moved-badge">Перенесено</span>';
+          html += '</div>';
+          html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">';
+          if (status === 'cancelled') {
+            html += '<button data-action="restore" data-day="'+l.day+'" data-start="'+l.start+'" data-subject="'+l.subject+'" data-room="'+l.room+'" class="btn-accent" style="padding:7px 8px;font-size:11px;display:flex;align-items:center;justify-content:center;gap:4px;grid-column:1/-1">'+icon('check','',11)+' Восстановить</button>';
+          } else {
+            html += '<button data-action="move" data-day="'+l.day+'" data-start="'+l.start+'" data-subject="'+l.subject+'" data-room="'+l.room+'" class="btn-ghost" style="padding:7px 8px;font-size:11px;display:flex;align-items:center;justify-content:center;gap:4px">'+icon('pin','',11)+' Перенести</button>';
+            html += '<button data-action="cancel" data-day="'+l.day+'" data-start="'+l.start+'" data-subject="'+l.subject+'" class="btn-ghost" style="padding:7px 8px;font-size:11px;color:#f87171;display:flex;align-items:center;justify-content:center;gap:4px">'+icon('x','',11)+' Отменить</button>';
+          }
+          html += '</div>';
+          if (override && override.note) html += '<div class="moved-note">💡 '+override.note+'</div>';
+          html += '</div></div>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+    document.querySelectorAll('[data-action]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var action = btn.getAttribute('data-action');
+        var day = parseInt(btn.getAttribute('data-day'));
+        var start = btn.getAttribute('data-start');
+        var subject = btn.getAttribute('data-subject') || '';
+        var room = btn.getAttribute('data-room') || '';
+        if (action === 'cancel') {
+          openMoveModal({ day: day, start: start, subject: subject, room: room, mode: 'cancel' });
+        } else if (action === 'move') {
+          openMoveModal({ day: day, start: start, subject: subject, room: room, mode: 'move' });
+        } else if (action === 'restore') {
+          apiStaffUpdateSchedule(state.token, day, start, 'restore', {}).then(function(r){
+            if (r.ok) { showToast('Пара восстановлена', 'success'); loadStaffSchedule(); }
+            else showToast('Ошибка: ' + (r.error||''), 'error');
+          }).catch(function(err){ showToast('Ошибка сети: ' + err.message, 'error'); });
+        }
+      });
+    });
+  }
+
+  function openMoveModal(opts) {
+    state.moveModal = opts;
+    renderMoveModal();
+  }
+
+  function renderMoveModal() {
+    var old = document.getElementById('moveModal');
+    if (old) old.remove();
+    
+    var opts = state.moveModal;
+    if (!opts) return;
+    
+    var html = '<div class="modal-overlay" id="moveModal"><div class="modal-content glass" style="padding:24px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><h2 style="font-size:17px;color:#FDE68A" class="text-wrap">'+(opts.mode==='cancel'?'Отмена пары':'Перенос пары')+'</h2><button class="btn-ghost" id="closeMoveModal" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0">'+icon('x')+'</button></div>';
+    
+    html += '<div style="padding:12px;background:rgba(245,158,11,0.10);border-radius:10px;border:1px solid rgba(245,158,11,0.25);margin-bottom:16px">';
+    html += '<div style="font-size:14px;font-weight:600;color:#FDE68A" class="text-wrap">'+opts.subject+'</div>';
+    html += '<div style="font-size:12px;color:#D4B896;margin-top:4px">'+opts.room+' · '+opts.start+'</div>';
+    html += '</div>';
+    
+    if (opts.mode === 'cancel') {
+      html += '<p style="color:#D4B896;font-size:13px;margin-bottom:14px">Пара будет отмечена как отменённая. Студенты получат уведомление.</p>';
+      html += '<div style="margin-bottom:14px"><label style="font-size:11px;color:#D4B896;display:block;margin-bottom:5px">Причина отмены (необязательно)</label><textarea class="input" id="moveNoteInput" rows="2" placeholder="Например: по болезни преподавателя"></textarea></div>';
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
+      html += '<button class="btn-ghost" id="cancelMoveBtn">Отмена</button>';
+      html += '<button class="btn-accent" id="confirmCancelBtn" style="background:linear-gradient(135deg,#ef4444,#f87171)">Отменить пару</button>';
+      html += '</div>';
+    } else {
+      html += '<p style="color:#D4B896;font-size:13px;margin-bottom:14px">Укажите новые данные. Студенты получат уведомление о переносе.</p>';
+      html += '<div style="display:flex;flex-direction:column;gap:10px">';
+      html += '<div><label style="font-size:11px;color:#D4B896;display:block;margin-bottom:5px">Новая аудитория *</label><input class="input" id="moveNewRoomInput" placeholder="Например: C-305" value=""/></div>';
+      html += '<div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Новое время (необязательно)</label><input class="input" id="moveNewTimeInput" placeholder="Например: 13:30" value=""/></div>';
+      html += '<div><label style="font-size:11px;color:#D8B4FE;display:block;margin-bottom:5px">Причина переноса</label><textarea class="input" id="moveNoteInput" rows="2" placeholder="Например: техническая проблема"></textarea></div>';
+      html += '</div>';
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">';
+      html += '<button class="btn-ghost" id="cancelMoveBtn">Отмена</button>';
+      html += '<button class="btn-accent" id="confirmMoveBtn">Сохранить</button>';
+      html += '</div>';
+    }
+    
+    html += '</div></div>';
+    document.body.insertAdjacentHTML('beforeend', html);
+    
+    document.getElementById('closeMoveModal').addEventListener('click', closeMoveModal);
+    document.getElementById('cancelMoveBtn').addEventListener('click', closeMoveModal);
+    
+    if (opts.mode === 'cancel') {
+      document.getElementById('confirmCancelBtn').addEventListener('click', async function(){
+        var note = document.getElementById('moveNoteInput').value.trim();
+        var btn = document.getElementById('confirmCancelBtn');
+        btn.disabled = true;
+        try {
+          var r = await apiStaffUpdateSchedule(state.token, opts.day, opts.start, 'cancel', { note: note });
+          if (r.ok) {
+            showToast('Пара отменена. Студенты уведомлены.', 'success');
+            closeMoveModal();
+            loadStaffSchedule();
+          } else {
+            showToast('Ошибка: ' + (r.error||''), 'error');
+            console.error('[API] Ошибка отмены:', r);
+          }
+        } catch(err) {
+          showToast('Ошибка сети: ' + err.message, 'error');
+          console.error('[API] Исключение при отмене:', err);
+        }
+        btn.disabled = false;
+      });
+    } else {
+      document.getElementById('confirmMoveBtn').addEventListener('click', async function(){
+        var newRoom = document.getElementById('moveNewRoomInput').value.trim();
+        var newTime = document.getElementById('moveNewTimeInput').value.trim();
+        var note = document.getElementById('moveNoteInput').value.trim();
+        if (!newRoom) {
+          showToast('Укажите новую аудиторию', 'error');
+          return;
+        }
+        var btn = document.getElementById('confirmMoveBtn');
+        btn.disabled = true;
+        try {
+          var r = await apiStaffUpdateSchedule(state.token, opts.day, opts.start, 'move', { newRoom: newRoom, newTime: newTime, note: note || 'Перенос преподавателем' });
+          if (r.ok) {
+            showToast('Пара перенесена. Студенты уведомлены.', 'success');
+            closeMoveModal();
+            loadStaffSchedule();
+          } else {
+            showToast('Ошибка: ' + (r.error||''), 'error');
+            console.error('[API] Ошибка переноса:', r);
+          }
+        } catch(err) {
+          showToast('Ошибка сети: ' + err.message, 'error');
+          console.error('[API] Исключение при переносе:', err);
+        }
+        btn.disabled = false;
+      });
+    }
+  }
+
+  function closeMoveModal() {
+    state.moveModal = null;
+    var modal = document.getElementById('moveModal');
+    if (modal) modal.remove();
+  }
+
+  function getStaffOverride(date, day, start) {
+    if (!state.staffSchedule || !state.staffSchedule.overrides) return null;
+    var iso = date.toISOString().slice(0,10);
+    return state.staffSchedule.overrides.find(function(o){ return o.date === iso && o.day === day && o.start === start; });
+  }
+
+  async function loadStaffGrades() {
+    state.staffGradesLoading = true;
+    renderStaffPageContent();
+    try {
+      var r = await apiStaffGrades(state.token);
+      if (r.ok) {
+        state.staffGrades = r.data;
+        state.staffGradesSubjects = r.subjects || ["Основы аркано-лингвистики", "Теория магических систем"];
+      } else {
+        console.error('[API] Ошибка загрузки БРС:', r);
+        showToast('Ошибка загрузки БРС', 'error');
+      }
+    } catch(err) {
+      console.error('[API] Исключение при загрузке БРС:', err);
+      showToast('Ошибка сети: ' + err.message, 'error');
+    }
+    state.staffGradesLoading = false;
+    renderStaffPageContent();
+  }
+
+  function renderStaffGrades(container) {
+    if (state.staffGradesLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    if (!state.staffGrades) { container.innerHTML = '<div class="glass" style="padding:20px">Данные не загружены</div>'; return; }
+    
+    var subjects = state.staffGradesSubjects || ["Основы аркано-лингвистики", "Теория магических систем"];
+    var currentSubject = state.staffGradesSubject || 'all';
+    
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:14px">';
+    html += '<div class="glass" style="padding:14px;background:rgba(245,158,11,0.10);border-color:rgba(245,158,11,0.35)"><div style="font-size:12px;color:#FDE68A;font-weight:500">📚 Журнал БРС</div><div style="font-size:11px;color:#D4B896;margin-top:3px">Только ваши дисциплины. Кнопки +/− или ввод числа.</div></div>';
+    
+    html += '<div class="filter-tabs">';
+    html += '<button class="chip'+(currentSubject==='all'?' active':'')+'" data-subject="all">Все ('+subjects.length+')</button>';
+    subjects.forEach(function(s){
+      html += '<button class="chip'+(currentSubject===s?' active':'')+'" data-subject="'+s+'">'+s+'</button>';
+    });
+    html += '</div>';
+    
+    var filteredStudents = state.staffGrades;
+    if (currentSubject !== 'all') {
+      filteredStudents = state.staffGrades.map(function(s){
+        return { id: s.id, fullName: s.fullName, group: s.group, grades: s.grades.filter(function(g){ return g.subject === currentSubject; }) };
+      }).filter(function(s){ return s.grades.length > 0; });
+    }
+    
+    if (filteredStudents.length === 0) {
+      html += '<div class="glass" style="padding:24px;text-align:center"><div style="font-weight:500">Нет студентов по выбранной дисциплине</div></div>';
+    } else {
+      filteredStudents.forEach(function(student){
+        var avg = student.grades.reduce(function(s,g){ return s+g.points; },0) / (student.grades.length||1);
+        html += '<div class="glass" style="padding:14px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px"><div style="min-width:0;flex:1"><div style="font-weight:600;font-size:14px;color:#FDE68A" class="text-wrap">'+student.fullName+'</div><div style="font-size:11px;color:#D4B896">'+student.group+' · Средний: <span style="color:'+(avg>=60?'#10B981':'#f87171')+';font-weight:600">'+avg.toFixed(1)+'</span></div></div></div>';
+        html += '<div style="display:flex;flex-direction:column;gap:8px">';
+        student.grades.forEach(function(g){
+          html += '<div class="student-row">';
+          html += '<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500" class="text-wrap">'+g.subject+'</div><div style="font-size:10px;color:#D4B896">'+g.control+' · до '+g.deadline+'</div></div>';
+          html += '<div class="grade-controls">';
+          html += '<button class="grade-btn minus" data-student="'+student.id+'" data-subject="'+g.subject+'" data-delta="-5">−</button>';
+          html += '<input class="grade-input" data-student="'+student.id+'" data-subject="'+g.subject+'" type="number" min="0" max="100" value="'+g.points+'"/>';
+          html += '<button class="grade-btn plus" data-student="'+student.id+'" data-subject="'+g.subject+'" data-delta="5">+</button>';
+          html += '<span class="badge '+(g.points>=85?'badge-emerald':g.points>=70?'badge-gold':g.points>=60?'badge-gray':'badge-red')+'" style="min-width:36px;justify-content:center">'+g.points+'</span>';
+          html += '</div></div>';
+        });
+        html += '</div></div>';
+      });
+    }
+    html += '</div>';
+    container.innerHTML = html;
+
+    document.querySelectorAll('.filter-tabs .chip').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        state.staffGradesSubject = btn.getAttribute('data-subject');
+        renderStaffPageContent();
+      });
+    });
+
+    document.querySelectorAll('.grade-btn').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        var studentId = btn.getAttribute('data-student');
+        var subject = btn.getAttribute('data-subject');
+        var delta = parseInt(btn.getAttribute('data-delta'));
+        var input = document.querySelector('.grade-input[data-student="'+studentId+'"][data-subject="'+subject+'"]');
+        var current = parseInt(input.value);
+        var newPoints = current + delta;
+        try {
+          var r = await apiStaffUpdateGrade(state.token, studentId, subject, newPoints);
+          if (r.ok) { input.value = newPoints; showToast('Балл обновлён: '+newPoints, 'success'); loadStaffGrades(); }
+          else { showToast('Ошибка: ' + (r.error||''), 'error'); console.error('[API] Ошибка обновления балла:', r); }
+        } catch(err) { showToast('Ошибка сети: ' + err.message, 'error'); console.error('[API] Исключение:', err); }
+      });
+    });
+    document.querySelectorAll('.grade-input').forEach(function(input){
+      var timeout;
+      input.addEventListener('change', function(){
+        clearTimeout(timeout);
+        timeout = setTimeout(async function(){
+          var studentId = input.getAttribute('data-student');
+          var subject = input.getAttribute('data-subject');
+          var val = parseInt(input.value);
+          if (isNaN(val)) return;
+          try {
+            var r = await apiStaffUpdateGrade(state.token, studentId, subject, val);
+            if (r.ok) showToast('Балл сохранён: '+val, 'success');
+            else { showToast('Ошибка: ' + (r.error||''), 'error'); console.error('[API] Ошибка:', r); }
+            loadStaffGrades();
+          } catch(err) { showToast('Ошибка сети: ' + err.message, 'error'); console.error('[API] Исключение:', err); }
+        }, 600);
+      });
+    });
+  }
+
+  async function loadStaffAnnouncements() {
+    state.staffAnnouncementsLoading = true;
+    renderStaffPageContent();
+    try {
+      var r = await apiStaffAnnouncements(state.token);
+      if (r.ok) state.staffAnnouncements = r.data;
+      else { console.error('[API] Ошибка загрузки объявлений:', r); showToast('Ошибка загрузки объявлений', 'error'); }
+    } catch(err) {
+      console.error('[API] Исключение при загрузке объявлений:', err);
+      showToast('Ошибка сети: ' + err.message, 'error');
+    }
+    state.staffAnnouncementsLoading = false;
+    renderStaffPageContent();
+  }
+
+  function renderStaffAnnouncements(container) {
+    if (state.staffAnnouncementsLoading) { container.innerHTML = '<div class="glass" style="padding:20px">Загрузка...</div>'; return; }
+    if (!state.staffAnnouncements) { container.innerHTML = '<div class="glass" style="padding:20px">Данные не загружены</div>'; return; }
+    var html = '<div class="fade-in" style="display:flex;flex-direction:column;gap:14px">';
+    html += '<div class="glass" style="padding:14px;background:rgba(245,158,11,0.10);border-color:rgba(245,158,11,0.35)"><div style="font-size:12px;color:#FDE68A;font-weight:500">📢 Объявления деканата</div><div style="font-size:11px;color:#D4B896;margin-top:3px">Публикация автоматически создаёт уведомление у студентов.</div></div>';
+    
+    html += '<div class="glass" style="padding:16px"><h3 style="font-weight:600;margin-bottom:10px;color:#FDE68A;font-size:15px">Новое объявление</h3>';
+    html += '<form id="annForm" style="display:flex;flex-direction:column;gap:10px"><input class="input" id="annTitleInput" placeholder="Заголовок" value="'+state.annTitle+'" required/><textarea class="input" id="annBodyInput" rows="3" placeholder="Текст объявления..." required>'+state.annBody+'</textarea><div><label style="font-size:11px;color:#D4B896;display:block;margin-bottom:5px">Адресат</label><select class="input" id="annTargetSelect"><option value="all"'+(state.annTarget==='all'?' selected':'')+'>Все студенты</option><option value="АЛ-204"'+(state.annTarget==='АЛ-204'?' selected':'')+'>Группа АЛ-204</option><option value="СИ-301"'+(state.annTarget==='СИ-301'?' selected':'')+'>Группа СИ-301</option><option value="СИ-202"'+(state.annTarget==='СИ-202'?' selected':'')+'>Группа СИ-202</option><option value="БЭ-201"'+(state.annTarget==='БЭ-201'?' selected':'')+'>Группа БЭ-201</option></select></div><button type="submit" class="btn-accent" style="align-self:flex-start">Опубликовать</button></form></div>';
+    
+    html += '<h3 style="font-weight:600;color:#FDE68A;margin-top:6px;font-size:15px">История объявлений</h3>';
+    if ((state.staffAnnouncements||[]).length === 0) {
+      html += '<div class="glass" style="padding:22px;text-align:center"><div style="font-weight:500">Объявлений пока нет</div></div>';
+    } else {
+      html += '<div style="display:flex;flex-direction:column;gap:8px">';
+      state.staffAnnouncements.forEach(function(a){
+        html += '<div class="glass" style="padding:12px"><div style="display:flex;align-items:start;justify-content:space-between;gap:6px"><div style="font-weight:500;color:#FDE68A;font-size:14px" class="text-wrap">'+a.title+'</div><span class="badge badge-gold">'+(a.targetGroup==='all'?'Всем':a.targetGroup)+'</span></div><div style="font-size:12px;color:#F3E8FF;margin-top:5px" class="text-wrap">'+a.body+'</div><div style="font-size:10px;color:#D4B896;margin-top:5px">'+a.authorName+' · '+a.date+'</div></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
+
+    var form = document.getElementById('annForm');
+    if (form) {
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        state.annTitle = document.getElementById('annTitleInput').value;
+        state.annBody = document.getElementById('annBodyInput').value;
+        state.annTarget = document.getElementById('annTargetSelect').value;
+        var btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        try {
+          var r = await apiStaffCreateAnnouncement(state.token, state.annTitle, state.annBody, state.annTarget);
+          if (r.ok) {
+            showToast('Объявление опубликовано. Студенты уведомлены.', 'success');
+            state.annTitle = ''; state.annBody = ''; state.annTarget = 'all';
+            loadStaffAnnouncements();
+          } else {
+            showToast('Ошибка: ' + (r.error||''), 'error');
+            console.error('[API] Ошибка публикации:', r);
+          }
+        } catch(err) {
+          showToast('Ошибка сети: ' + err.message, 'error');
+          console.error('[API] Исключение:', err);
+        }
+        btn.disabled = false;
+      });
+    }
+  }
+
+  function doLogout() {
+    try { localStorage.removeItem(TOKEN_KEY); } catch(e){}
+    state.token = null;
+    state.user = null;
+    state.chatOpen = false;
+    state.chatMessages = [];
+    state.page = null;
+    state.staffProfile = null;
+    state.staffProfileLoading = true;
+    state.staffSchedule = null;
+    state.staffScheduleLoading = true;
+    state.staffGrades = null;
+    state.staffGradesLoading = true;
+    state.staffAnnouncements = null;
+    state.staffAnnouncementsLoading = true;
+    state.appeals = [];
+    state.appealsLoading = true;
+    state.appointments = [];
+    state.appointmentsLoading = true;
+    document.body.classList.remove('staff-mode');
+    render();
+  }
+
+  async function init() {
+    try {
+      seedDB();
+      if (state.token) {
+        var r = await apiMe(state.token);
+        if (r.ok) {
+          state.user = r.user;
+          if (r.user.role === 'staff') {
+            state.page = 'staff-profile';
+          } else {
+            state.page = 'profile';
+          }
+          console.log('[Init] Загружен пользователь, роль:', r.user.role, 'Вкладка:', state.page);
+          state.chatMessages = [{ role:'bot', text:'Привет, '+r.user.fullName.split(' ')[0]+'! ✨' }];
+        } else {
+          try { localStorage.removeItem(TOKEN_KEY); } catch(e){}
+          state.token = null;
+        }
+      } else {
+        state.page = 'profile';
+      }
+    } catch(e) {
+      state.bootErr = e.message || String(e);
+      console.error('[Init] Исключение:', e);
+    }
+    state.loading = false;
+    render();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
